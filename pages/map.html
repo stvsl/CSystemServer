@@ -44,8 +44,22 @@
         var scaleCtrl = new BMapGL.ScaleControl();
         map.addControl(scaleCtrl);
         // 添加3D控件
-        var navi3DCtrl = new BMapGL.NavigationControl3D();  
+        var navi3DCtrl = new BMapGL.NavigationControl3D();
         map.addControl(navi3DCtrl);
+        var point = new BMapGL.Point(116.404, 39.915);
+        var marker = new BMapGL.Marker(point);        // 创建标注   
+        map.addOverlay(marker);
+        marker.addEventListener("click", function () {
+            map.addEventListener('click', handleClick);
+            function handleClick(e) {
+                alert('点击的经纬度：' + e.latlng.lng + ', ' + e.latlng.lat);
+                var mercator = map.lnglatToMercator(e.latlng.lng, e.latlng.lat);
+                alert('点的墨卡托坐标：' + mercator[0] + ', ' + mercator[1]);
+                map.removeEventListener('click', handleClick);
+            }
+            
+        });
+
 
         //qt通信组件实例化
         new QWebChannel(qt.webChannelTransport, function (channel) {
@@ -71,9 +85,9 @@
             map.setZoom(20);
         }
 
-        function setPos(i,j){
-            var point = new BMapGL.Point(i,j);
-            map.centerAndZoom(point,15);
+        function setPos(i, j) {
+            var point = new BMapGL.Point(i, j);
+            map.centerAndZoom(point, 15);
             map.setZoom(20);
         }
 
@@ -106,7 +120,7 @@
         }
 
         //卫星地球模式
-        function setMapType(){
+        function setMapType() {
             map.setMapType(BMAP_EARTH_MAP);
         }
 

@@ -1,3 +1,6 @@
 {
-    "makefile.extensionOutputFolder": "./.vscode"
+    "go.inferGopath": false,
+    "commentTranslate.source": "Bing",
+    "commentTranslate.multiLineMerge": false,
+    "commentTranslate.targetLanguage": "zh-CN"
 }
