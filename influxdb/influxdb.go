@@ -39,14 +39,14 @@ func Query() {
 
 	// Iterate over query response
 	for result.Next() {
-		// Notice when group key has changed
+		//更改组密钥时请注意
 		if result.TableChanged() {
 			fmt.Printf("table: %s\n", result.TableMetadata().String())
 		}
-		// Access data
+		//访问数据
 		fmt.Printf("value: %v\n", result.Record().Value())
 	}
-	// check for an error
+	//检查是否有错误
 	if result.Err() != nil {
 		fmt.Printf("query parsing error: \n" + result.Err().Error())
 	}
