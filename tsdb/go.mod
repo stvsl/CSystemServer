@@ -1,4 +1,4 @@
-module influxdb
+module stvsljl.com/stvsl/influxdb
 
 go 1.17
 
