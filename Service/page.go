@@ -8,12 +8,12 @@ import (
 	"stvsljl.com/stvsl/influxdb"
 )
 
-func mapPage(c *gin.Context) {
+func mapPageHandler(c *gin.Context) {
 	c.HTML(http.StatusOK, "map.html", nil)
 	fmt.Println("IP:", c.ClientIP())
 }
 
-func submitInfo(c *gin.Context) {
+func submitInfoHandler(c *gin.Context) {
 	var submitInfo influxdb.SubmitInfo
 	c.BindJSON(&submitInfo)
 	fmt.Println("submitInfo:", submitInfo)

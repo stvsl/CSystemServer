@@ -4,7 +4,7 @@ go 1.17
 
 require stvsljl.com/stvsl/Service v0.0.0
 
-require stvsljl.com/stvsl/Sql v0.0.0
+require stvsljl.com/stvsl/Sql v0.0.0 // indirect
 
 require (
 	github.com/deepmap/oapi-codegen v1.8.2 // indirect
@@ -14,6 +14,7 @@ require (
 	github.com/go-playground/universal-translator v0.18.0 // indirect
 	github.com/go-playground/validator/v10 v10.4.1 // indirect
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
+	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/go-cmp v0.5.6 // indirect
 	github.com/influxdata/influxdb-client-go/v2 v2.6.0 // indirect

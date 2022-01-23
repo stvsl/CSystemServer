@@ -8,6 +8,9 @@ import (
 	"errors"
 )
 
+var RSA_PRIVATE string
+var RSA_PUBLIC string
+
 // 生成RSA密钥对
 func GenerateRsaKey() (string, string, error) {
 	// 生成私钥
@@ -65,4 +68,14 @@ func RsaDecrypt(ciphertext []byte, privateKey []byte) ([]byte, error) {
 	}
 	// 解密
 	return rsa.DecryptPKCS1v15(rand.Reader, priv, ciphertext)
+}
+
+// 生成服务器RSA密钥对
+func GenerateServerRsaKey() {
+	PRIVATE, PUBLIC, err := GenerateRsaKey()
+	if err != nil {
+		panic(err)
+	}
+	RSA_PRIVATE = PRIVATE
+	RSA_PUBLIC = PUBLIC
 }
