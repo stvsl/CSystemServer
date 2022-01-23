@@ -39,10 +39,12 @@ type SubmitInfo struct {
 	BiologicalOxygenDemand float64 `json:"BiologicalOxygenDemand"`
 	// 化学需氧量
 	ChemicalOxygenDemand float64 `json:"ChemicalOxygenDemand"`
-	//细菌总数
+	// 细菌总数
 	BacteriaCount int `json:"BacteriaCount"`
 	// 大肠杆菌数
 	StaphylococcusCount int `json:"StaphylococcusCount"`
+	// 动植物油
+
 }
 
 //解析json，使用json数据实例化SubmitInfo

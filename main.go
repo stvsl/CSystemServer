@@ -24,11 +24,11 @@ func start() {
 }
 
 func test() {
-	// nodeinfo := Sql.NodeInformation{}
-	// Sql.CreateNodeInformationTable()
-	// Sql.InsertNodeInformation(&nodeinfo)
-	// Sql.UpdateNodeInformationByID("C0000000000", &nodeinfo)
-	// Sql.DeleteNodeInformationByID("C0000000000")
-	// fmt.Println(Sql.GetNodeInformationByID("C0000000001"))
+	nodeinfo := Sql.NodeInformation{}
+	Sql.CreateNodeInformationTable()
+	Sql.InsertNodeInformation(&nodeinfo)
+	Sql.UpdateNodeInformationByID("C0000000000", &nodeinfo)
+	Sql.DeleteNodeInformationByID("C0000000000")
+	fmt.Println(Sql.GetNodeInformationByID("C0000000001"))
 	Sql.Optimize()
 }
