@@ -6,10 +6,11 @@ import (
 	"crypto/x509"
 	"encoding/pem"
 	"errors"
+	"fmt"
 )
 
-var RSA_PRIVATE string
-var RSA_PUBLIC string
+var RSA_PRIVATE_LOCAL *rsa.PrivateKey
+var RSA_PUBLIC_LOCAL *rsa.PublicKey
 
 // 生成RSA密钥对
 func GenerateRsaKey() (string, string, error) {
@@ -34,6 +35,20 @@ func GenerateRsaKey() (string, string, error) {
 		},
 	)
 	return string(privateKeyPem), string(publicKeyPem), nil
+}
+
+// 生成服务器本地密钥对
+func GenerateLocalRsaKey() {
+	// 生成私钥
+	privateKey, err := rsa.GenerateKey(rand.Reader, 1024)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	// 生成公钥
+	publicKey := &privateKey.PublicKey
+	RSA_PRIVATE_LOCAL = privateKey
+	RSA_PUBLIC_LOCAL = publicKey
 }
 
 // 加密
@@ -68,14 +83,4 @@ func RsaDecrypt(ciphertext []byte, privateKey []byte) ([]byte, error) {
 	}
 	// 解密
 	return rsa.DecryptPKCS1v15(rand.Reader, priv, ciphertext)
-}
-
-// 生成服务器RSA密钥对
-func GenerateServerRsaKey() {
-	PRIVATE, PUBLIC, err := GenerateRsaKey()
-	if err != nil {
-		panic(err)
-	}
-	RSA_PRIVATE = PRIVATE
-	RSA_PUBLIC = PUBLIC
 }

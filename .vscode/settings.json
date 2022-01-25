@@ -27,5 +27,6 @@
             "database": "CSystemServer",
             "username": "root"
         }
-    ]
+    ],
+    "commentTranslate.source": "Baidu"
 }

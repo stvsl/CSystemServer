@@ -4,7 +4,7 @@ go 1.17
 
 require stvsljl.com/stvsl/Service v0.0.0
 
-require stvsljl.com/stvsl/Sql v0.0.0 // indirect
+require stvsljl.com/stvsl/Sql v0.0.0
 
 require (
 	github.com/deepmap/oapi-codegen v1.8.2 // indirect
@@ -40,6 +40,7 @@ require (
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 	gorm.io/driver/mysql v1.2.3 // indirect
 	gorm.io/gorm v1.22.5 // indirect
+	stvsljl.com/stvsl/RSA v0.0.0 // indirect
 	stvsljl.com/stvsl/influxdb v0.0.0 // indirect
 )
 
@@ -48,3 +49,5 @@ replace stvsljl.com/stvsl/Service v0.0.0 => ./Service
 replace stvsljl.com/stvsl/influxdb v0.0.0 => ./tsdb
 
 replace stvsljl.com/stvsl/Sql v0.0.0 => ./db
+
+replace stvsljl.com/stvsl/RSA v0.0.0 => ./rsa
