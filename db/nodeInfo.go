@@ -1,6 +1,8 @@
 package Sql
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"log"
@@ -211,4 +213,45 @@ func (nodeinfo NodeInformation) GetByType(type1 string) (*[]NodeInformation, err
 	// 查询数据库
 	db.Where("Type = ?", type1).Find(&nodeinfolist)
 	return &nodeinfolist, nil
+}
+
+// 实现NodeInfo接口的GetCheck方法
+// 根据节点id获取其校验信息
+func (nodeinfo NodeInformation) GetCheck(id string) (string, error) {
+	db, err := GetDB()
+	if err != nil {
+		return "", err
+	}
+	// 获取数据库中指定id的DataConfig字段数据
+	var dataConfig string
+	db.Where("ID = ?", id).First(&nodeinfo)
+	dataConfig = nodeinfo.DataConfig
+	// 判断是否查询到
+	if dataConfig == "" {
+		return "", errors.New("查询不到该节点信息")
+	}
+	return dataConfig, nil
+}
+
+// 实现NodeInfo接口的GetFeatures方法
+// 根据ID获取节点的特征信息
+func (nodeinfo NodeInformation) GetFeatures(id string) (string, error) {
+	db, err := GetDB()
+	if err != nil {
+		return "", err
+	}
+	// 保存结果到nodeinfo
+	db.Where("ID = ?", id).First(&nodeinfo)
+	// 判断是否查询到
+	if nodeinfo.ID == "" {
+		return "", errors.New("查询不到该节点信息")
+	}
+	str := nodeinfo.RsaPublic
+	// 获取str的SHA256值
+	sha256 := sha256.New()
+	sha256.Write([]byte(str))
+	hash := sha256.Sum(nil)
+	// 转换成16进制
+	hex := hex.EncodeToString(hash)
+	return hex, nil
 }
