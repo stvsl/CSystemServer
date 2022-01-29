@@ -5,6 +5,7 @@ import (
 
 	"stvsljl.com/stvsl/Service"
 	"stvsljl.com/stvsl/Sql"
+	"stvsljl.com/stvsl/influxdb"
 )
 
 func main() {
@@ -26,4 +27,8 @@ func start() {
 func test() {
 	var x Sql.NodeInformation
 	fmt.Println(x.GetIP("C0000000001"))
+	err := influxdb.ConnectTest()
+	if err != nil {
+		fmt.Println(err)
+	}
 }

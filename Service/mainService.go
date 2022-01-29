@@ -15,5 +15,6 @@ func Start() {
 	router.POST("/submit/nodesubmit", NodeAuthMiddleware(), submitInfoHandler) //节点数据上传到时序数据库
 	router.POST("/auth/nodeauth", nodeauthHandler)                             //节点获取token
 	router.POST("/auth/getauth", authHandler)                                  //客户端获取token
+	// router.GET("passwd/getpass", NodeAuthMiddleware(), getPassHandler)         //获取密码残片
 	router.Run(":10214")
 }

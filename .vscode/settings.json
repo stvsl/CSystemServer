@@ -8,19 +8,6 @@
             "previewLimit": 50,
             "server": "localhost",
             "port": 3306,
-            "driver": "MariaDB",
-            "name": "stvsl-system",
-            "username": "root",
-            "password": "2060",
-            "database": "STUDENT"
-        },
-        {
-            "mysqlOptions": {
-                "authProtocol": "default"
-            },
-            "previewLimit": 50,
-            "server": "localhost",
-            "port": 3306,
             "askForPassword": true,
             "driver": "MariaDB",
             "name": "CSystemServer",

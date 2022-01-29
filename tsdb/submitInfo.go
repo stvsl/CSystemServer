@@ -140,6 +140,7 @@ func (submitInfo SubmitInfo) Print() {
 }
 
 // 数据写入到时序数据库
-func (submitInfo SubmitInfo) WriteToDB() {
-	Write(&submitInfo)
+func (submitInfo SubmitInfo) WriteToDB() error {
+	err := Write(&submitInfo)
+	return err
 }

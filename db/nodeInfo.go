@@ -17,21 +17,24 @@ import (
 
 // NodeInformation表结构体
 type NodeInformation struct {
-	IP         string    `gorm:"column:IP" json:"ip"`                  // IP地址
-	ID         string    `gorm:"column:ID" json:"id"`                  // 节点ID信息
-	Locate     string    `gorm:"column:LOCATE" json:"locate"`          // 节点地理位置
-	Type       int       `gorm:"column:TYPE" json:"type"`              // 节点类型
-	Belong     string    `gorm:"column:BELONG" json:"belong"`          // 所属信息
-	Principal  string    `gorm:"column:PRINCIPAL" json:"principal"`    // 负责人信息
-	Installer  string    `gorm:"column:INSTALLER" json:"installer"`    // 安装人信息
-	Maintainer string    `gorm:"column:MAINTAINER" json:"maintainer"`  // 维护人信息
-	DataConfig string    `gorm:"column:DATA_CONFIG" json:"dataconfig"` // 数据来源配置
-	RsaPrivate string    `gorm:"column:RSA_PRIVATE" json:"rsaprivate"` // RSA私钥
-	RsaPublic  string    `gorm:"column:RSA_PUBLIC" json:"rsapublic"`   // RSA公钥
-	SelfInfo   string    `gorm:"column:SELF_INFO" json:"selfinfo"`     // 自检信息
-	LastUpload time.Time `gorm:"column:LAST_UPLOAD" json:"lastupload"` // 上次更新日期
-	SelfDate   time.Time `gorm:"column:SELF_DATE" json:"selfdate"`     // 上次自检日期
-	Remark     string    `gorm:"column:REMARK" json:"remark"`          // 备注信息
+	IP          string    `gorm:"column:IP" json:"ip"`                    // IP地址
+	ID          string    `gorm:"column:ID" json:"id"`                    // 节点ID信息
+	Locate      string    `gorm:"column:LOCATE" json:"locate"`            // 节点地理位置
+	Type        int       `gorm:"column:TYPE" json:"type"`                // 节点类型
+	Belong      string    `gorm:"column:BELONG" json:"belong"`            // 所属信息
+	Principal   string    `gorm:"column:PRINCIPAL" json:"principal"`      // 负责人信息
+	Installer   string    `gorm:"column:INSTALLER" json:"installer"`      // 安装人信息
+	Maintainer  string    `gorm:"column:MAINTAINER" json:"maintainer"`    // 维护人信息
+	DataConfig  string    `gorm:"column:DATA_CONFIG" json:"dataconfig"`   // 数据来源配置
+	RsaPrivate  string    `gorm:"column:RSA_PRIVATE" json:"rsaprivate"`   // RSA私钥
+	RsaPublic   string    `gorm:"column:RSA_PUBLIC" json:"rsapublic"`     // RSA公钥
+	SelfInfo    string    `gorm:"column:SELF_INFO" json:"selfinfo"`       // 自检信息
+	LastUpload  time.Time `gorm:"column:LAST_UPLOAD" json:"lastupload"`   // 上次更新日期
+	SelfDate    time.Time `gorm:"column:SELF_DATE" json:"selfdate"`       // 上次自检日期
+	Remark      string    `gorm:"column:REMARK" json:"remark"`            // 备注信息
+	InstallDate time.Time `gorm:"column:INSTALL_DATE" json:"installdate"` // 安装日期
+	Lo          float32   `gorm:"column:LO" json:"lo"`                    // 经度
+	Li          float32   `gorm:"column:LI" json:"li"`                    // 纬度
 }
 
 // 实现NodeInfo接口的Insert方法
