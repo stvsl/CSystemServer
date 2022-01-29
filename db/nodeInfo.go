@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"log"
+	"strconv"
 	"time"
 )
 
@@ -76,9 +77,37 @@ func (nodeinfo NodeInformation) Delete(id string) error {
 	return nil
 }
 
+// 实现NodeInfo接口的Get方法
+// 根据id,地址信息，所属信息，类型聚合查找
+func (nodeinfo NodeInformation) Get(id, locate, belong, typee string) (string, error) {
+	db, err := GetDB()
+	if err != nil {
+		return "", errors.New("数据库连接失败")
+	}
+	// 将string转换为int
+	typei, err := strconv.Atoi(typee)
+	if err != nil {
+		return "", err
+	}
+	// 结果数组
+	var result []NodeInformation
+	// 模糊查询
+	if belong == "" {
+		//查询
+		db.Where("Belong LIKE ?", "%"+id+"%").Where("Locate LIKE ?", "%"+locate+"%").Where("TYPE = ?", typei).Find(&result)
+	}
+	// 序列化结果
+	jsonstr, err := json.Marshal(result)
+	if err != nil {
+		log.Panicln("json序列化失败：", err)
+		return "", errors.New("json序列化失败")
+	}
+	return string(jsonstr), nil
+}
+
 // 实现NodeInfo接口的ToJson方法
 // 根据id查询节点
-func (nodeinfo NodeInformation) Get(id string) (string, error) {
+func (nodeinfo NodeInformation) GetToJson(id string) (string, error) {
 	db, err := GetDB()
 	if err != nil {
 		return "", err

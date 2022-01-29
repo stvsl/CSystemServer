@@ -50,6 +50,13 @@ func CX007(c *gin.Context) {
 	})
 }
 
+func CX101(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
+		"code":    "CX101",
+		"message": "服务异常，请稍后再试",
+	})
+}
+
 //请求的数据无效
 func CX301(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
