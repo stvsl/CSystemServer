@@ -2,8 +2,10 @@ package influxdb
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
+	"strings"
 	"time"
 
 	influxdb2 "github.com/influxdata/influxdb-client-go/v2"
@@ -50,9 +52,45 @@ func Write(submit *SubmitInfo) error {
 	return nil
 }
 
-func Query() error {
+// 查询从XXXX到XXXX期间内多个节点的数据
+func Query(nodeid []string, startTime, endTime string) (string, error) {
+	// 创建客户端
+	client := influxdb2.NewClient("http://127.0.0.1:8086", "3TRkGcboToJkMfoPUwvuVvC0Rn1Tstzq5beZAjyv-MscinJA43c0ZIdW70eapXCB5MRTlwQ92VkDMs-Qs6yfDw==")
+	//获取非阻塞写入客户端
+	queryAPI := client.QueryAPI("stvsl-jc")
+	// 查询nodeid里面所有节点的数据
+	query := `from(bucket:"stvsljc")|> range(start: -1h) |> filter(fn: (r) => r._measurement == "data" and r.ID in ("` + strings.Join(nodeid, `","`) + `") and r._time >= "` + startTime + `" and r._time <= "` + endTime + `")`
+	//获取查询表结果
+	result, err := queryAPI.Query(context.Background(), query)
+	if err != nil {
+		log.Panicln("query error:", err)
+		return "", err
+	}
+	//检查是否有错误
+	if result.Err() != nil {
+		log.Panicln("query error:", result.Err())
+		return "", result.Err()
+	}
+	//总是在最后关闭客户端
+	defer client.Close()
+
+	// Iterate over query response
+	var data []string
+	for result.Next() {
+		// 模拟打印查询结果
+		data = append(data, result.Record().String())
+	}
+	// 转换为json
+	jsonData, err := json.Marshal(data)
+	if err != nil {
+		log.Panicln("json error:", err)
+		return "", err
+	}
+	return string(jsonData), nil
+}
+
+func Query2() error {
 	//创建客户端
-	//您可以从ui中的“api令牌标签”生成api令牌
 	client := influxdb2.NewClient("http://127.0.0.1:8086", "3TRkGcboToJkMfoPUwvuVvC0Rn1Tstzq5beZAjyv-MscinJA43c0ZIdW70eapXCB5MRTlwQ92VkDMs-Qs6yfDw==")
 	// Get query client
 	queryAPI := client.QueryAPI("stvsl-jc")
@@ -64,19 +102,6 @@ func Query() error {
 	if err != nil {
 		log.Panicln("query error:", err)
 		return err
-	}
-
-	//迭代查询响应
-	for result.Next() {
-		//更改组密钥时请注意
-		// if
-		result.TableChanged()
-		//  {
-		// fmt.Printf("table: %s\n", result.TableMetadata().String())
-		// }
-		//访问数据
-		// TODO 查询设计
-		fmt.Printf("%s\n", result.Record().String())
 	}
 	//检查是否有错误
 	if result.Err() != nil {

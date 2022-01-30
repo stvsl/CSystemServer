@@ -51,13 +51,11 @@ func (nodeinfo NodeInformation) Insert() error {
 
 // 实现接口的Update方法
 // 根据json信息修改指定的节点
-func (nodeinfo NodeInformation) Update(jsonstr string) error {
+func (nodeinfo NodeInformation) Update() error {
 	db, err := GetDB()
 	if err != nil {
 		return err
 	}
-	// 根据json信息序列化为对象
-	err = json.Unmarshal([]byte(jsonstr), &nodeinfo)
 	if err != nil {
 		log.Panicln("json解析失败：", err)
 		return errors.New("json解析失败")
@@ -79,22 +77,62 @@ func (nodeinfo NodeInformation) Delete(id string) error {
 
 // 实现NodeInfo接口的Get方法
 // 根据id,地址信息，所属信息，类型聚合查找
+func (nodeinfo NodeInformation) GetAbsolute(id, locate, belong, typee string) (string, error) {
+	db, err := GetDB()
+	if err != nil {
+		return "", errors.New("数据库连接失败")
+	}
+	// 结果数组
+	var result []NodeInformation
+	// 判断typee是否为空
+	if typee == "" {
+		// 查询所有节点信息
+		db.Where("BELONG = ? AND LOCATE = ?", belong, locate).Find(&result)
+	} else {
+		// 将string转换为int
+		typei, err := strconv.Atoi(typee)
+		if err != nil {
+			return "", err
+		}
+		// 严格查询
+		if belong == "" {
+			//查询
+			db.Where("BELONG = ? AND LOCATE = ? AND TYPE = ?", belong, locate, typei).Find(&result)
+		}
+	}
+	// 序列化结果
+	jsonstr, err := json.Marshal(result)
+	if err != nil {
+		log.Panicln("json序列化失败：", err)
+		return "", errors.New("json序列化失败")
+	}
+	return string(jsonstr), nil
+}
+
+// 实现NodeInfo接口的Get方法
+// 根据id,地址信息，所属信息，类型聚合查找
 func (nodeinfo NodeInformation) Get(id, locate, belong, typee string) (string, error) {
 	db, err := GetDB()
 	if err != nil {
 		return "", errors.New("数据库连接失败")
 	}
-	// 将string转换为int
-	typei, err := strconv.Atoi(typee)
-	if err != nil {
-		return "", err
-	}
 	// 结果数组
 	var result []NodeInformation
-	// 模糊查询
-	if belong == "" {
-		//查询
-		db.Where("Belong LIKE ?", "%"+id+"%").Where("Locate LIKE ?", "%"+locate+"%").Where("TYPE = ?", typei).Find(&result)
+	// 判断typee是否为空
+	if typee == "" {
+		// 查询所有节点信息
+		db.Where("Belong LIKE ?", "%"+id+"%").Where("Locate LIKE ?", "%"+locate+"%").Find(&result)
+	} else {
+		// 将string转换为int
+		typei, err := strconv.Atoi(typee)
+		if err != nil {
+			return "", err
+		}
+		// 模糊查询
+		if belong == "" {
+			//查询
+			db.Where("Belong LIKE ?", "%"+id+"%").Where("Locate LIKE ?", "%"+locate+"%").Where("TYPE = ?", typei).Find(&result)
+		}
 	}
 	// 序列化结果
 	jsonstr, err := json.Marshal(result)
@@ -286,4 +324,18 @@ func (nodeinfo NodeInformation) GetFeatures(id string) (string, error) {
 	// 转换成16进制
 	hex := hex.EncodeToString(hash)
 	return hex, nil
+}
+
+// 实现NodeInfo接口的GetIDsByBelong方法
+// 根据所属信息获取所有匹配的节点的ID
+func (nodeinfo NodeInformation) GetIDsByBelong(belong string) ([]string, error) {
+	db, err := GetDB()
+	if err != nil {
+		return nil, err
+	}
+	// 保存查询结果
+	var ids []string
+	// 查询数据库
+	db.Where("Belong = ?", belong).Pluck("ID", &ids)
+	return ids, nil
 }

@@ -10,11 +10,16 @@ require stvsljl.com/stvsl/Sql v0.0.0
 
 require stvsljl.com/stvsl/RSA v0.0.0
 
+require stvsljl.com/stvsl/influxdb v0.0.0
+
+replace stvsljl.com/stvsl/influxdb v0.0.0 => ../tsdb
+
 replace stvsljl.com/stvsl/RSA v0.0.0 => ../rsa
 
 replace stvsljl.com/stvsl/Sql v0.0.0 => ../db
 
 replace stvsljl.com/stvsl/influxdb v0.0.0 => ../tsdb
+
 
 require (
 	github.com/deepmap/oapi-codegen v1.8.2 // indirect

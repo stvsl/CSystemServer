@@ -73,6 +73,14 @@ func CX302(c *gin.Context) {
 	})
 }
 
+//无权限执行
+func CX303(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
+		"code":    "CX303",
+		"message": "拒绝请求",
+	})
+}
+
 //数据库异常
 func CX401(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{

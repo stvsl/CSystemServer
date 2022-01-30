@@ -20,6 +20,19 @@ type AccountInformations struct {
 	STATUS       int    `gorm:"column:STATUS" json:"sTATUS"`             // 账户状态
 }
 
+// GetType(string) (int, error)                   // 根据ID获取节点的类型
+// 实现AccountInfo接口的GetType方法
+// 根据ID获取节点的类型
+func (accountInformations AccountInformations) GetType(id string) (int, error) {
+	db, err := GetDB()
+	if err != nil {
+		return -1, err
+	}
+	var account AccountInformations
+	db.Where("ID = ?", id).Find(&account)
+	return account.TYPE, nil
+}
+
 // 实现AccountInfo接口的GetByType方法
 // 根据账户类型获取符合的账户并返回
 func (accountInformations AccountInformations) GetByType(accountType int) (*[]AccountInformations, error) {
@@ -54,7 +67,7 @@ func (accountInformations AccountInformations) Update() error {
 	return nil
 }
 
-// 实现AccountInfo接口的Get方法
+// 实现AccountInfo接口的GetFragment方法
 // 查询指定ID的用户的密码残片
 func (accountInformations AccountInformations) GetFragment(id string) (string, error) {
 	db, err := GetDB()
@@ -64,6 +77,19 @@ func (accountInformations AccountInformations) GetFragment(id string) (string, e
 	var account AccountInformations
 	db.Where("ID = ?", id).Find(&account)
 	return account.FRAGMENT, nil
+}
+
+// 实现AccountInfo接口的GetOrganization方法
+// 查询指定ID的用户的所属机构信息
+func (accountInformations AccountInformations) GetOrganization(id string) (string, error) {
+	db, err := GetDB()
+	if err != nil {
+		return "", err
+	}
+	// 查询其Organization信息
+	var account AccountInformations
+	db.Where("ID = ?", id).Find(&account)
+	return account.ORGANIZATION, nil
 }
 
 // 帐号存在性校验
