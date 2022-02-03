@@ -1,5 +1,7 @@
 package Sql
 
+import "encoding/json"
+
 /******************************************************************************
  * 账户信息表
  * @Author stvsl
@@ -20,7 +22,22 @@ type AccountInformations struct {
 	STATUS       int    `gorm:"column:STATUS" json:"sTATUS"`             // 账户状态
 }
 
-// GetType(string) (int, error)                   // 根据ID获取节点的类型
+// 根据ID获取账户信息
+func (accountInformations AccountInformations) Get(id string) (string, error) {
+	db, err := GetDB()
+	if err != nil {
+		return "", err
+	}
+	var account AccountInformations
+	db.Where("ID = ?", id).Find(&account)
+	// 转换为JSON
+	accountJSON, err := json.Marshal(account)
+	if err != nil {
+		return "", err
+	}
+	return string(accountJSON), nil
+}
+
 // 实现AccountInfo接口的GetType方法
 // 根据ID获取节点的类型
 func (accountInformations AccountInformations) GetType(id string) (int, error) {
@@ -53,6 +70,17 @@ func (accountInformations AccountInformations) Add() error {
 		return err
 	}
 	db.Create(&accountInformations)
+	return nil
+}
+
+// 实现AccountInfo接口的Delete方法
+// 根据ID删除账户信息
+func (accountInformations AccountInformations) Delete(id string) error {
+	db, err := GetDB()
+	if err != nil {
+		return err
+	}
+	db.Where("ID = ?", id).Delete(&accountInformations)
 	return nil
 }
 
@@ -92,7 +120,8 @@ func (accountInformations AccountInformations) GetOrganization(id string) (strin
 	return account.ORGANIZATION, nil
 }
 
-// 帐号存在性校验
+// 实现AccountInfo接口的Exist方法
+// 判断指定ID的账户是否存在
 func (accountInformations AccountInformations) Exist(id string) (bool, error) {
 	db, err := GetDB()
 	if err != nil {
@@ -100,5 +129,11 @@ func (accountInformations AccountInformations) Exist(id string) (bool, error) {
 	}
 	var account AccountInformations
 	db.Where("ID = ?", id).Find(&account)
-	return account.ID != "", err
+	result := account.ID != ""
+	// 查询status信息是否为-1的冻结状态
+	if result {
+		db.Where("ID = ?", id).Find(&account)
+		result = account.STATUS != -1
+	}
+	return result, err
 }

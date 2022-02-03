@@ -50,6 +50,7 @@ func CX007(c *gin.Context) {
 	})
 }
 
+// 不应该发生的未知数据库问题
 func CX101(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"code":    "CX101",

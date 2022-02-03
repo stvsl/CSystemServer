@@ -22,9 +22,11 @@ type NodeInfo interface {
 
 /* AccountInfo接口 */
 type AccountInfo interface {
+	Get(string) (string, error)                    // 根据ID获取账户信息
 	GetType(string) (int, error)                   // 根据ID获取节点的类型
 	GetByType(int) (*[]AccountInformations, error) // 根据账户类型获取符合的账户并返回
 	Add() error                                    // 添加账户信息
+	Delete(string) error                           // 根据ID删除账户信息
 	Update() error                                 // 根据ID更新账户信息
 	GetFragment(string) (string, error)            // 查询指定ID的用户的密码残片
 	GetOrganization(string) (string, error)        // 查询指定ID的用户的所属机构信息
