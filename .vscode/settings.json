@@ -1,0 +1,19 @@
+{
+    "go.inferGopath": false,
+    "sqltools.connections": [
+        {
+            "mysqlOptions": {
+                "authProtocol": "default"
+            },
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 3306,
+            "askForPassword": true,
+            "driver": "MariaDB",
+            "name": "CSystemServer",
+            "database": "CSystemServer",
+            "username": "root"
+        }
+    ],
+    "commentTranslate.source": "Baidu"
+}
