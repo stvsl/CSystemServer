@@ -1,0 +1,397 @@
+{
+	"BUILD_DIR" : "/home/stvsl/Documents/\u4e2a\u4eba\u9879\u76ee/CSystem-Qt6/CSystem-Qt6/build/CSystem-Qt6_autogen",
+	"CMAKE_BINARY_DIR" : "/home/stvsl/Documents/\u4e2a\u4eba\u9879\u76ee/CSystem-Qt6/CSystem-Qt6/build",
+	"CMAKE_CURRENT_BINARY_DIR" : "/home/stvsl/Documents/\u4e2a\u4eba\u9879\u76ee/CSystem-Qt6/CSystem-Qt6/build",
+	"CMAKE_CURRENT_SOURCE_DIR" : "/home/stvsl/Documents/\u4e2a\u4eba\u9879\u76ee/CSystem-Qt6/CSystem-Qt6",
+	"CMAKE_EXECUTABLE" : "/usr/bin/cmake",
+	"CMAKE_LIST_FILES" : 
+	[
+		"/home/stvsl/Documents/\u4e2a\u4eba\u9879\u76ee/CSystem-Qt6/CSystem-Qt6/CMakeLists.txt",
+		"/home/stvsl/Documents/\u4e2a\u4eba\u9879\u76ee/CSystem-Qt6/CSystem-Qt6/build/CMakeFiles/3.22.2/CMakeSystem.cmake",
+		"/usr/share/cmake/Modules/CMakeSystemSpecificInitialize.cmake",
+		"/home/stvsl/Documents/\u4e2a\u4eba\u9879\u76ee/CSystem-Qt6/CSystem-Qt6/build/CMakeFiles/3.22.2/CMakeCXXCompiler.cmake",
+		"/usr/share/cmake/Modules/CMakeSystemSpecificInformation.cmake",
+		"/usr/share/cmake/Modules/CMakeGenericSystem.cmake",
+		"/usr/share/cmake/Modules/CMakeInitializeConfigs.cmake",
+		"/usr/share/cmake/Modules/Platform/Linux.cmake",
+		"/usr/share/cmake/Modules/Platform/UnixPaths.cmake",
+		"/usr/share/cmake/Modules/CMakeCXXInformation.cmake",
+		"/usr/share/cmake/Modules/CMakeLanguageInformation.cmake",
+		"/usr/share/cmake/Modules/Compiler/GNU-CXX.cmake",
+		"/usr/share/cmake/Modules/Compiler/GNU.cmake",
+		"/usr/share/cmake/Modules/Compiler/CMakeCommonCompilerMacros.cmake",
+		"/usr/share/cmake/Modules/Platform/Linux-GNU-CXX.cmake",
+		"/usr/share/cmake/Modules/Platform/Linux-GNU.cmake",
+		"/usr/share/cmake/Modules/CMakeCommonLanguageInclude.cmake",
+		"/usr/lib64/cmake/Qt5/Qt5ConfigVersion.cmake",
+		"/usr/lib64/cmake/Qt5/Qt5Config.cmake",
+		"/usr/lib64/cmake/Qt5/Qt5ConfigVersion.cmake",
+		"/usr/lib64/cmake/Qt5/Qt5Config.cmake",
+		"/usr/lib64/cmake/Qt5/Qt5ModuleLocation.cmake",
+		"/usr/lib64/cmake/Qt5Widgets/Qt5WidgetsConfigVersion.cmake",
+		"/usr/lib64/cmake/Qt5Widgets/Qt5WidgetsConfig.cmake",
+		"/usr/lib64/cmake/Qt5Gui/Qt5GuiConfigVersion.cmake",
+		"/usr/lib64/cmake/Qt5Gui/Qt5GuiConfig.cmake",
+		"/usr/lib64/cmake/Qt5Core/Qt5CoreConfigVersion.cmake",
+		"/usr/lib64/cmake/Qt5Core/Qt5CoreConfig.cmake",
+		"/usr/lib64/cmake/Qt5Core/Qt5CoreConfigExtras.cmake",
+		"/usr/lib64/cmake/Qt5Core/Qt5CoreConfigExtrasMkspecDir.cmake",
+		"/usr/lib64/cmake/Qt5Core/Qt5CoreMacros.cmake",
+		"/usr/share/cmake/Modules/CMakeParseArguments.cmake",
+		"/usr/lib64/cmake/Qt5Gui/Qt5Gui_QComposePlatformInputContextPlugin.cmake",
+		"/usr/lib64/cmake/Qt5Gui/Qt5Gui_QEglFSEmulatorIntegrationPlugin.cmake",
+		"/usr/lib64/cmake/Qt5Gui/Qt5Gui_QEglFSIntegrationPlugin.cmake",
+		"/usr/lib64/cmake/Qt5Gui/Qt5Gui_QEglFSKmsEglDeviceIntegrationPlugin.cmake",
+		"/usr/lib64/cmake/Qt5Gui/Qt5Gui_QEglFSKmsGbmIntegrationPlugin.cmake",
+		"/usr/lib64/cmake/Qt5Gui/Qt5Gui_QEglFSX11IntegrationPlugin.cmake",
+		"/usr/lib64/cmake/Qt5Gui/Qt5Gui_QEvdevKeyboardPlugin.cmake",
+		"/usr/lib64/cmake/Qt5Gui/Qt5Gui_QEvdevMousePlugin.cmake",
+		"/usr/lib64/cmake/Qt5Gui/Qt5Gui_QEvdevTabletPlugin.cmake",
+		"/usr/lib64/cmake/Qt5Gui/Qt5Gui_QEvdevTouchScreenPlugin.cmake",
+		"/usr/lib64/cmake/Qt5Gui/Qt5Gui_QGifPlugin.cmake",
+		"/usr/lib64/cmake/Qt5Gui/Qt5Gui_QGtk3ThemePlugin.cmake",
+		"/usr/lib64/cmake/Qt5Gui/Qt5Gui_QICNSPlugin.cmake",
+		"/usr/lib64/cmake/Qt5Gui/Qt5Gui_QICOPlugin.cmake",
+		"/usr/lib64/cmake/Qt5Gui/Qt5Gui_QIbusPlatformInputContextPlugin.cmake",
+		"/usr/lib64/cmake/Qt5Gui/Qt5Gui_QJp2Plugin.cmake",
+		"/usr/lib64/cmake/Qt5Gui/Qt5Gui_QJpegPlugin.cmake",
+		"/usr/lib64/cmake/Qt5Gui/Qt5Gui_QLibInputPlugin.cmake",
+		"/usr/lib64/cmake/Qt5Gui/Qt5Gui_QLinuxFbIntegrationPlugin.cmake",
+		"/usr/lib64/cmake/Qt5Gui/Qt5Gui_QMinimalEglIntegrationPlugin.cmake",
+		"/usr/lib64/cmake/Qt5Gui/Qt5Gui_QMinimalIntegrationPlugin.cmake",
+		"/usr/lib64/cmake/Qt5Gui/Qt5Gui_QMngPlugin.cmake",
+		"/usr/lib64/cmake/Qt5Gui/Qt5Gui_QOffscreenIntegrationPlugin.cmake",
+		"/usr/lib64/cmake/Qt5Gui/Qt5Gui_QPdfPlugin.cmake",
+		"/usr/lib64/cmake/Qt5Gui/Qt5Gui_QSvgIconPlugin.cmake",
+		"/usr/lib64/cmake/Qt5Gui/Qt5Gui_QSvgPlugin.cmake",
+		"/usr/lib64/cmake/Qt5Gui/Qt5Gui_QTgaPlugin.cmake",
+		"/usr/lib64/cmake/Qt5Gui/Qt5Gui_QTiffPlugin.cmake",
+		"/usr/lib64/cmake/Qt5Gui/Qt5Gui_QTsLibPlugin.cmake",
+		"/usr/lib64/cmake/Qt5Gui/Qt5Gui_QTuioTouchPlugin.cmake",
+		"/usr/lib64/cmake/Qt5Gui/Qt5Gui_QVncIntegrationPlugin.cmake",
+		"/usr/lib64/cmake/Qt5Gui/Qt5Gui_QWaylandEglPlatformIntegrationPlugin.cmake",
+		"/usr/lib64/cmake/Qt5Gui/Qt5Gui_QWaylandIntegrationPlugin.cmake",
+		"/usr/lib64/cmake/Qt5Gui/Qt5Gui_QWaylandXCompositeEglPlatformIntegrationPlugin.cmake",
+		"/usr/lib64/cmake/Qt5Gui/Qt5Gui_QWaylandXCompositeGlxPlatformIntegrationPlugin.cmake",
+		"/usr/lib64/cmake/Qt5Gui/Qt5Gui_QWbmpPlugin.cmake",
+		"/usr/lib64/cmake/Qt5Gui/Qt5Gui_QWebpPlugin.cmake",
+		"/usr/lib64/cmake/Qt5Gui/Qt5Gui_QXcbEglIntegrationPlugin.cmake",
+		"/usr/lib64/cmake/Qt5Gui/Qt5Gui_QXcbGlxIntegrationPlugin.cmake",
+		"/usr/lib64/cmake/Qt5Gui/Qt5Gui_QXcbIntegrationPlugin.cmake",
+		"/usr/lib64/cmake/Qt5Gui/Qt5Gui_QXdgDesktopPortalThemePlugin.cmake",
+		"/usr/lib64/cmake/Qt5Gui/Qt5GuiConfigExtras.cmake",
+		"/usr/lib64/cmake/Qt5Widgets/Qt5WidgetsConfigExtras.cmake",
+		"/usr/lib64/cmake/Qt5Widgets/Qt5WidgetsMacros.cmake",
+		"/usr/share/cmake/Modules/CMakeParseArguments.cmake",
+		"/usr/lib64/cmake/Qt5LinguistTools/Qt5LinguistToolsConfigVersion.cmake",
+		"/usr/lib64/cmake/Qt5LinguistTools/Qt5LinguistToolsConfig.cmake",
+		"/usr/lib64/cmake/Qt5LinguistTools/Qt5LinguistToolsMacros.cmake",
+		"/usr/share/cmake/Modules/CMakeParseArguments.cmake",
+		"/usr/lib64/cmake/Qt5/Qt5ConfigVersion.cmake",
+		"/usr/lib64/cmake/Qt5/Qt5Config.cmake",
+		"/usr/lib64/cmake/Qt5/Qt5ModuleLocation.cmake",
+		"/usr/lib64/cmake/Qt5Sql/Qt5SqlConfigVersion.cmake",
+		"/usr/lib64/cmake/Qt5Sql/Qt5SqlConfig.cmake",
+		"/usr/lib64/cmake/Qt5Sql/Qt5Sql_QIBaseDriverPlugin.cmake",
+		"/usr/lib64/cmake/Qt5Sql/Qt5Sql_QMYSQLDriverPlugin.cmake",
+		"/usr/lib64/cmake/Qt5Sql/Qt5Sql_QODBCDriverPlugin.cmake",
+		"/usr/lib64/cmake/Qt5Sql/Qt5Sql_QPSQLDriverPlugin.cmake",
+		"/usr/lib64/cmake/Qt5Sql/Qt5Sql_QSQLiteDriverPlugin.cmake",
+		"/usr/lib64/cmake/Qt5Sql/Qt5Sql_QTDSDriverPlugin.cmake",
+		"/usr/lib64/cmake/Qt5Sql/Qt5Sql_SqliteCipherDriverPlugin.cmake",
+		"/usr/lib64/cmake/Qt5/Qt5ConfigVersion.cmake",
+		"/usr/lib64/cmake/Qt5/Qt5Config.cmake",
+		"/usr/lib64/cmake/Qt5/Qt5ModuleLocation.cmake",
+		"/usr/lib64/cmake/Qt5Network/Qt5NetworkConfigVersion.cmake",
+		"/usr/lib64/cmake/Qt5Network/Qt5NetworkConfig.cmake",
+		"/usr/lib64/cmake/Qt5Network/Qt5Network_QConnmanEnginePlugin.cmake",
+		"/usr/lib64/cmake/Qt5Network/Qt5Network_QGenericEnginePlugin.cmake",
+		"/usr/lib64/cmake/Qt5Network/Qt5Network_QNetworkManagerEnginePlugin.cmake",
+		"/usr/lib64/cmake/Qt5/Qt5ConfigVersion.cmake",
+		"/usr/lib64/cmake/Qt5/Qt5Config.cmake",
+		"/usr/lib64/cmake/Qt5/Qt5ModuleLocation.cmake",
+		"/usr/lib64/cmake/Qt5WebEngineWidgets/Qt5WebEngineWidgetsConfigVersion.cmake",
+		"/usr/lib64/cmake/Qt5WebEngineWidgets/Qt5WebEngineWidgetsConfig.cmake",
+		"/usr/lib64/cmake/Qt5WebEngineCore/Qt5WebEngineCoreConfigVersion.cmake",
+		"/usr/lib64/cmake/Qt5WebEngineCore/Qt5WebEngineCoreConfig.cmake",
+		"/usr/lib64/cmake/Qt5Quick/Qt5QuickConfigVersion.cmake",
+		"/usr/lib64/cmake/Qt5Quick/Qt5QuickConfig.cmake",
+		"/usr/lib64/cmake/Qt5QmlModels/Qt5QmlModelsConfigVersion.cmake",
+		"/usr/lib64/cmake/Qt5QmlModels/Qt5QmlModelsConfig.cmake",
+		"/usr/lib64/cmake/Qt5Qml/Qt5QmlConfigVersion.cmake",
+		"/usr/lib64/cmake/Qt5Qml/Qt5QmlConfig.cmake",
+		"/usr/lib64/cmake/Qt5Qml/Qt5Qml_QDebugMessageServiceFactory.cmake",
+		"/usr/lib64/cmake/Qt5Qml/Qt5Qml_QLocalClientConnectionFactory.cmake",
+		"/usr/lib64/cmake/Qt5Qml/Qt5Qml_QQmlDebugServerFactory.cmake",
+		"/usr/lib64/cmake/Qt5Qml/Qt5Qml_QQmlDebuggerServiceFactory.cmake",
+		"/usr/lib64/cmake/Qt5Qml/Qt5Qml_QQmlInspectorServiceFactory.cmake",
+		"/usr/lib64/cmake/Qt5Qml/Qt5Qml_QQmlNativeDebugConnectorFactory.cmake",
+		"/usr/lib64/cmake/Qt5Qml/Qt5Qml_QQmlNativeDebugServiceFactory.cmake",
+		"/usr/lib64/cmake/Qt5Qml/Qt5Qml_QQmlPreviewServiceFactory.cmake",
+		"/usr/lib64/cmake/Qt5Qml/Qt5Qml_QQmlProfilerServiceFactory.cmake",
+		"/usr/lib64/cmake/Qt5Qml/Qt5Qml_QQuickProfilerAdapterFactory.cmake",
+		"/usr/lib64/cmake/Qt5Qml/Qt5Qml_QTcpServerConnectionFactory.cmake",
+		"/usr/lib64/cmake/Qt5Qml/Qt5QmlConfigExtras.cmake",
+		"/usr/lib64/cmake/Qt5WebChannel/Qt5WebChannelConfigVersion.cmake",
+		"/usr/lib64/cmake/Qt5WebChannel/Qt5WebChannelConfig.cmake",
+		"/usr/lib64/cmake/Qt5Positioning/Qt5PositioningConfigVersion.cmake",
+		"/usr/lib64/cmake/Qt5Positioning/Qt5PositioningConfig.cmake",
+		"/usr/lib64/cmake/Qt5Positioning/Qt5Positioning_QGeoPositionInfoSourceFactoryGeoclue.cmake",
+		"/usr/lib64/cmake/Qt5Positioning/Qt5Positioning_QGeoPositionInfoSourceFactoryGeoclue2.cmake",
+		"/usr/lib64/cmake/Qt5Positioning/Qt5Positioning_QGeoPositionInfoSourceFactoryPoll.cmake",
+		"/usr/lib64/cmake/Qt5PrintSupport/Qt5PrintSupportConfigVersion.cmake",
+		"/usr/lib64/cmake/Qt5PrintSupport/Qt5PrintSupportConfig.cmake",
+		"/usr/lib64/cmake/Qt5PrintSupport/Qt5PrintSupport_QCupsPrinterSupportPlugin.cmake",
+		"/usr/lib64/cmake/Qt5WebChannel/Qt5WebChannelConfigVersion.cmake",
+		"/usr/lib64/cmake/Qt5WebChannel/Qt5WebChannelConfig.cmake"
+	],
+	"CMAKE_SOURCE_DIR" : "/home/stvsl/Documents/\u4e2a\u4eba\u9879\u76ee/CSystem-Qt6/CSystem-Qt6",
+	"DEP_FILE" : "/home/stvsl/Documents/\u4e2a\u4eba\u9879\u76ee/CSystem-Qt6/CSystem-Qt6/build/CSystem-Qt6_autogen/deps",
+	"DEP_FILE_RULE_NAME" : "CSystem-Qt6_autogen/timestamp",
+	"HEADERS" : 
+	[
+		[
+			"/home/stvsl/Documents/\u4e2a\u4eba\u9879\u76ee/CSystem-Qt6/CSystem-Qt6/DButils/dbutils.h",
+			"MU",
+			"43NZW3EC2L/moc_dbutils.cpp",
+			null
+		],
+		[
+			"/home/stvsl/Documents/\u4e2a\u4eba\u9879\u76ee/CSystem-Qt6/CSystem-Qt6/configManager/configmanager.h",
+			"MU",
+			"2AMAPQ3YY3/moc_configmanager.cpp",
+			null
+		],
+		[
+			"/home/stvsl/Documents/\u4e2a\u4eba\u9879\u76ee/CSystem-Qt6/CSystem-Qt6/configManager/mapconfig.h",
+			"MU",
+			"2AMAPQ3YY3/moc_mapconfig.cpp",
+			null
+		],
+		[
+			"/home/stvsl/Documents/\u4e2a\u4eba\u9879\u76ee/CSystem-Qt6/CSystem-Qt6/csystemmain/accountmanagement.h",
+			"MU",
+			"NQ7CDFRANN/moc_accountmanagement.cpp",
+			null
+		],
+		[
+			"/home/stvsl/Documents/\u4e2a\u4eba\u9879\u76ee/CSystem-Qt6/CSystem-Qt6/csystemmain/csystemmain.h",
+			"MU",
+			"NQ7CDFRANN/moc_csystemmain.cpp",
+			null
+		],
+		[
+			"/home/stvsl/Documents/\u4e2a\u4eba\u9879\u76ee/CSystem-Qt6/CSystem-Qt6/csystemmain/dataview.h",
+			"MU",
+			"NQ7CDFRANN/moc_dataview.cpp",
+			null
+		],
+		[
+			"/home/stvsl/Documents/\u4e2a\u4eba\u9879\u76ee/CSystem-Qt6/CSystem-Qt6/csystemmain/mapsetting.h",
+			"MU",
+			"NQ7CDFRANN/moc_mapsetting.cpp",
+			null
+		],
+		[
+			"/home/stvsl/Documents/\u4e2a\u4eba\u9879\u76ee/CSystem-Qt6/CSystem-Qt6/csystemmain/mapview.h",
+			"MU",
+			"NQ7CDFRANN/moc_mapview.cpp",
+			null
+		],
+		[
+			"/home/stvsl/Documents/\u4e2a\u4eba\u9879\u76ee/CSystem-Qt6/CSystem-Qt6/csystemmain/nodeinformation.h",
+			"MU",
+			"NQ7CDFRANN/moc_nodeinformation.cpp",
+			null
+		],
+		[
+			"/home/stvsl/Documents/\u4e2a\u4eba\u9879\u76ee/CSystem-Qt6/CSystem-Qt6/csystemmain/nodeinstall.h",
+			"MU",
+			"NQ7CDFRANN/moc_nodeinstall.cpp",
+			null
+		],
+		[
+			"/home/stvsl/Documents/\u4e2a\u4eba\u9879\u76ee/CSystem-Qt6/CSystem-Qt6/csystemmain/servicecontrol.h",
+			"MU",
+			"NQ7CDFRANN/moc_servicecontrol.cpp",
+			null
+		],
+		[
+			"/home/stvsl/Documents/\u4e2a\u4eba\u9879\u76ee/CSystem-Qt6/CSystem-Qt6/csystemmain/serviceimformation.h",
+			"MU",
+			"NQ7CDFRANN/moc_serviceimformation.cpp",
+			null
+		],
+		[
+			"/home/stvsl/Documents/\u4e2a\u4eba\u9879\u76ee/CSystem-Qt6/CSystem-Qt6/csystemmain/systemsetting.h",
+			"MU",
+			"NQ7CDFRANN/moc_systemsetting.cpp",
+			null
+		],
+		[
+			"/home/stvsl/Documents/\u4e2a\u4eba\u9879\u76ee/CSystem-Qt6/CSystem-Qt6/main.h",
+			"MU",
+			"EWIEGA46WW/moc_main.cpp",
+			null
+		],
+		[
+			"/home/stvsl/Documents/\u4e2a\u4eba\u9879\u76ee/CSystem-Qt6/CSystem-Qt6/netWorkUtils/netWorkUtils.h",
+			"MU",
+			"WS34K2EH5V/moc_netWorkUtils.cpp",
+			null
+		]
+	],
+	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
+	"INCLUDE_DIR" : "/home/stvsl/Documents/\u4e2a\u4eba\u9879\u76ee/CSystem-Qt6/CSystem-Qt6/build/CSystem-Qt6_autogen/include",
+	"MOC_COMPILATION_FILE" : "/home/stvsl/Documents/\u4e2a\u4eba\u9879\u76ee/CSystem-Qt6/CSystem-Qt6/build/CSystem-Qt6_autogen/mocs_compilation.cpp",
+	"MOC_DEFINITIONS" : 
+	[
+		"QT_CORE_LIB",
+		"QT_GUI_LIB",
+		"QT_NETWORK_LIB",
+		"QT_POSITIONING_LIB",
+		"QT_PRINTSUPPORT_LIB",
+		"QT_QMLMODELS_LIB",
+		"QT_QML_LIB",
+		"QT_QUICK_LIB",
+		"QT_SQL_LIB",
+		"QT_WEBCHANNEL_LIB",
+		"QT_WEBENGINECORE_LIB",
+		"QT_WEBENGINEWIDGETS_LIB",
+		"QT_WIDGETS_LIB"
+	],
+	"MOC_DEPEND_FILTERS" : 
+	[
+		[
+			"Q_PLUGIN_METADATA",
+			"[\n][ \t]*Q_PLUGIN_METADATA[ \t]*\\([^\\)]*FILE[ \t]*\"([^\"]+)\""
+		]
+	],
+	"MOC_INCLUDES" : 
+	[
+		"/home/stvsl/Documents/\u4e2a\u4eba\u9879\u76ee/CSystem-Qt6/CSystem-Qt6/build",
+		"/home/stvsl/Documents/\u4e2a\u4eba\u9879\u76ee/CSystem-Qt6/CSystem-Qt6",
+		"/usr/include/qt",
+		"/usr/include/qt/QtWidgets",
+		"/usr/include/qt/QtGui",
+		"/usr/include/qt/QtCore",
+		"/usr/lib/qt/mkspecs/linux-g++",
+		"/usr/include/qt/QtSql",
+		"/usr/include/qt/QtNetwork",
+		"/usr/include/qt/QtWebEngineWidgets",
+		"/usr/include/qt/QtWebEngineCore",
+		"/usr/include/qt/QtQuick",
+		"/usr/include/qt/QtQmlModels",
+		"/usr/include/qt/QtQml",
+		"/usr/include/qt/QtWebChannel",
+		"/usr/include/qt/QtPositioning",
+		"/usr/include/qt/QtPrintSupport",
+		"/usr/include/c++/11.1.0",
+		"/usr/include/c++/11.1.0/x86_64-pc-linux-gnu",
+		"/usr/include/c++/11.1.0/backward",
+		"/usr/lib/gcc/x86_64-pc-linux-gnu/11.1.0/include",
+		"/usr/local/include",
+		"/usr/lib/gcc/x86_64-pc-linux-gnu/11.1.0/include-fixed",
+		"/usr/include"
+	],
+	"MOC_MACRO_NAMES" : [ "Q_OBJECT", "Q_GADGET", "Q_NAMESPACE", "Q_NAMESPACE_EXPORT" ],
+	"MOC_OPTIONS" : [],
+	"MOC_PATH_PREFIX" : false,
+	"MOC_PREDEFS_CMD" : 
+	[
+		"/usr/bin/c++",
+		"-dM",
+		"-E",
+		"-c",
+		"/usr/share/cmake/Modules/CMakeCXXCompilerABI.cpp"
+	],
+	"MOC_PREDEFS_FILE" : "/home/stvsl/Documents/\u4e2a\u4eba\u9879\u76ee/CSystem-Qt6/CSystem-Qt6/build/CSystem-Qt6_autogen/moc_predefs.h",
+	"MOC_RELAXED_MODE" : false,
+	"MOC_SKIP" : [],
+	"MULTI_CONFIG" : false,
+	"PARALLEL" : 8,
+	"PARSE_CACHE_FILE" : "/home/stvsl/Documents/\u4e2a\u4eba\u9879\u76ee/CSystem-Qt6/CSystem-Qt6/build/CMakeFiles/CSystem-Qt6_autogen.dir/ParseCache.txt",
+	"QT_MOC_EXECUTABLE" : "/usr/bin/moc",
+	"QT_UIC_EXECUTABLE" : "/usr/bin/uic",
+	"QT_VERSION_MAJOR" : 5,
+	"QT_VERSION_MINOR" : 15,
+	"SETTINGS_FILE" : "/home/stvsl/Documents/\u4e2a\u4eba\u9879\u76ee/CSystem-Qt6/CSystem-Qt6/build/CMakeFiles/CSystem-Qt6_autogen.dir/AutogenUsed.txt",
+	"SOURCES" : 
+	[
+		[
+			"/home/stvsl/Documents/\u4e2a\u4eba\u9879\u76ee/CSystem-Qt6/CSystem-Qt6/DButils/dbutils.cpp",
+			"MU",
+			null
+		],
+		[
+			"/home/stvsl/Documents/\u4e2a\u4eba\u9879\u76ee/CSystem-Qt6/CSystem-Qt6/configManager/configmanager.cpp",
+			"MU",
+			null
+		],
+		[
+			"/home/stvsl/Documents/\u4e2a\u4eba\u9879\u76ee/CSystem-Qt6/CSystem-Qt6/csystemmain/accountmanagement.cpp",
+			"MU",
+			null
+		],
+		[
+			"/home/stvsl/Documents/\u4e2a\u4eba\u9879\u76ee/CSystem-Qt6/CSystem-Qt6/csystemmain/csystemmain.cpp",
+			"MU",
+			null
+		],
+		[
+			"/home/stvsl/Documents/\u4e2a\u4eba\u9879\u76ee/CSystem-Qt6/CSystem-Qt6/csystemmain/dataview.cpp",
+			"MU",
+			null
+		],
+		[
+			"/home/stvsl/Documents/\u4e2a\u4eba\u9879\u76ee/CSystem-Qt6/CSystem-Qt6/csystemmain/mapsetting.cpp",
+			"MU",
+			null
+		],
+		[
+			"/home/stvsl/Documents/\u4e2a\u4eba\u9879\u76ee/CSystem-Qt6/CSystem-Qt6/csystemmain/mapview.cpp",
+			"MU",
+			null
+		],
+		[
+			"/home/stvsl/Documents/\u4e2a\u4eba\u9879\u76ee/CSystem-Qt6/CSystem-Qt6/csystemmain/nodeinformation.cpp",
+			"MU",
+			null
+		],
+		[
+			"/home/stvsl/Documents/\u4e2a\u4eba\u9879\u76ee/CSystem-Qt6/CSystem-Qt6/csystemmain/nodeinstall.cpp",
+			"MU",
+			null
+		],
+		[
+			"/home/stvsl/Documents/\u4e2a\u4eba\u9879\u76ee/CSystem-Qt6/CSystem-Qt6/csystemmain/servicecontrol.cpp",
+			"MU",
+			null
+		],
+		[
+			"/home/stvsl/Documents/\u4e2a\u4eba\u9879\u76ee/CSystem-Qt6/CSystem-Qt6/csystemmain/serviceimformation.cpp",
+			"MU",
+			null
+		],
+		[
+			"/home/stvsl/Documents/\u4e2a\u4eba\u9879\u76ee/CSystem-Qt6/CSystem-Qt6/csystemmain/systemsetting.cpp",
+			"MU",
+			null
+		],
+		[
+			"/home/stvsl/Documents/\u4e2a\u4eba\u9879\u76ee/CSystem-Qt6/CSystem-Qt6/main.cpp",
+			"MU",
+			null
+		],
+		[
+			"/home/stvsl/Documents/\u4e2a\u4eba\u9879\u76ee/CSystem-Qt6/CSystem-Qt6/netWorkUtils/netWorkUtils.cpp",
+			"MU",
+			null
+		]
+	],
+	"UIC_OPTIONS" : [],
+	"UIC_SEARCH_PATHS" : [],
+	"UIC_SKIP" : [],
+	"UIC_UI_FILES" : [],
+	"VERBOSITY" : 0
+}
