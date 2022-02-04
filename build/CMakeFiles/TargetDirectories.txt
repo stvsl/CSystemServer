@@ -1,5 +1,0 @@
-/home/stvsl/Documents/个人项目/CSystem-Qt6/CSystem-Qt6/build/CMakeFiles/CSystem-Qt6.dir
-/home/stvsl/Documents/个人项目/CSystem-Qt6/CSystem-Qt6/build/CMakeFiles/edit_cache.dir
-/home/stvsl/Documents/个人项目/CSystem-Qt6/CSystem-Qt6/build/CMakeFiles/rebuild_cache.dir
-/home/stvsl/Documents/个人项目/CSystem-Qt6/CSystem-Qt6/build/CMakeFiles/CSystem-Qt6_autogen_timestamp_deps.dir
-/home/stvsl/Documents/个人项目/CSystem-Qt6/CSystem-Qt6/build/CMakeFiles/CSystem-Qt6_autogen.dir
