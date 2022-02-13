@@ -11,11 +11,14 @@ func Start() {
 	router := gin.Default()
 	router.SetTrustedProxies(nil)
 	router.LoadHTMLGlob("./web/pages/*")
+	router.GET("/ping", pingHandler)                                                 //连接测试,同时返回服务器RSA密钥信息
+	router.POST("/ping", pingpostHandler)                                            //二次连接，连理双向通信
 	router.GET("/pages/default/map", mapPageHandler)                                 //对外提供地图页面
 	router.POST("/submit/nodesubmit", NodeAuthMiddleware(), submitInfoHandler)       //节点数据上传到时序数据库
 	router.POST("/auth/nodeauth", nodeauthHandler)                                   //节点获取token
 	router.POST("/auth/getauth", authHandler)                                        //客户端获取token
 	router.GET("/passwd/getpass", NodeAuthMiddleware(), getPassHandler)              //获取用户密码残片
+	router.POST("/passwd/getpass", NodeAuthMiddleware(), setPassHandler)             //设置用户密码残片
 	router.GET("/node/info", NodeAuthMiddleware(), nodeInfoSendHandler)              //获取相关节点信息(模糊搜索)
 	router.GET("/node/info/absolute", NodeAuthMiddleware(), nodeInfoAbsoluteHandler) //获取相关节点信息(严格匹配)
 	router.GET("/node/datainfo", NodeAuthMiddleware(), nodeDatainfoHandler)          //获取相关节点的传感器数据
@@ -34,5 +37,6 @@ func Start() {
 	router.POST("/account/new", NodeAuthMiddleware(), accountNewHandler)             //创建新账户
 	router.GET("/update", updateHandler)                                             //更新检测
 	router.GET("/update/download", updateDownloadHandler)                            //更新下载
-	router.Run(":10214")
+	// 启动SSL
+	router.RunTLS(":10214", "rsa/stvsljl.com.crt", "rsa/stvsljl.com.key")
 }

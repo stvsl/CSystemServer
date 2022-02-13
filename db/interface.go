@@ -28,6 +28,7 @@ type AccountInfo interface {
 	Add() error                                    // 添加账户信息
 	Delete(string) error                           // 根据ID删除账户信息
 	Update() error                                 // 根据ID更新账户信息
+	GetPasswdFragment(string) (string, error)      // 根据ID获取账户密码特征信息
 	GetFragment(string) (string, error)            // 查询指定ID的用户的密码残片
 	GetOrganization(string) (string, error)        // 查询指定ID的用户的所属机构信息
 	Exist(string) (bool, error)                    // 判断账户是否存在

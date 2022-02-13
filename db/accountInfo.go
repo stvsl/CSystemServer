@@ -1,6 +1,10 @@
 package Sql
 
-import "encoding/json"
+import (
+	"crypto/sha256"
+	"encoding/hex"
+	"encoding/json"
+)
 
 /******************************************************************************
  * 账户信息表
@@ -17,7 +21,6 @@ type AccountInformations struct {
 	USERID       string `gorm:"column:USER_ID" json:"uSERId"`            // 身份证号
 	USERLOCATE   string `gorm:"column:USER_LOCATE" json:"uSERLOCATE"`    // 家庭住址
 	ORGANIZATION string `gorm:"column:ORGANIZATION" json:"oRGANIZATION"` // 所属机构代码
-	RSAPRIVATE   string `gorm:"column:RSA_PRIVATE" json:"rSAPRIVATE"`    // RSA私钥
 	RSAPUBLIC    string `gorm:"column:RSA_PUBLIC" json:"rSAPUBLIC"`      // PSA公钥
 	STATUS       int    `gorm:"column:STATUS" json:"sTATUS"`             // 账户状态
 }
@@ -93,6 +96,26 @@ func (accountInformations AccountInformations) Update() error {
 	}
 	db.Save(&accountInformations)
 	return nil
+}
+
+// 实现AccountInfo接口的GetPasswdFragment方法
+// 根据ID获取账户密码特征信息
+func (accountInformations AccountInformations) GetPasswdFragment(id string) (string, error) {
+	db, err := GetDB()
+	if err != nil {
+		return "", err
+	}
+	// 查询其PasswdFragment信息
+	var account AccountInformations
+	db.Where("ID = ?", id).Find(&account)
+	str := account.PASSWD
+	// 获取str的SHA256值
+	sha256 := sha256.New()
+	sha256.Write([]byte(str))
+	hash := sha256.Sum(nil)
+	// 转换成16进制
+	hex := hex.EncodeToString(hash)
+	return hex, nil
 }
 
 // 实现AccountInfo接口的GetFragment方法

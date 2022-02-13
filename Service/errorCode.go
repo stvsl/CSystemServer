@@ -82,6 +82,14 @@ func CX303(c *gin.Context) {
 	})
 }
 
+// 数据解密失败
+func CX304(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
+		"code":    "CX304",
+		"message": "数据解密失败",
+	})
+}
+
 //数据库异常
 func CX401(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{

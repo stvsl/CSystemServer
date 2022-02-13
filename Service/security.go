@@ -72,8 +72,8 @@ func authHandler(c *gin.Context) {
 		CX003(c)
 		return
 	}
-	// 安全性校验-密码残片校验
-	s, err := n.GetFragment(claims.ID)
+	// 安全性校验-密码特征校验
+	s, err := n.GetPasswdFragment(claims.ID)
 	if err != nil {
 		CX401(c)
 		return

@@ -6,11 +6,14 @@ import (
 	"crypto/x509"
 	"encoding/pem"
 	"errors"
-	"fmt"
+	"log"
 )
 
-var RSA_PRIVATE_LOCAL *rsa.PrivateKey
-var RSA_PUBLIC_LOCAL *rsa.PublicKey
+// 服务器RSA私钥
+var RSA_PRIVATE_LOCAL string
+
+// 服务器RSA公钥
+var RSA_PUBLIC_LOCAL string
 
 // 生成RSA密钥对
 func GenerateRsaKey() (string, string, error) {
@@ -39,38 +42,32 @@ func GenerateRsaKey() (string, string, error) {
 
 // 生成服务器本地密钥对
 func GenerateLocalRsaKey() {
-	// 生成私钥
-	privateKey, err := rsa.GenerateKey(rand.Reader, 1024)
+	priv, ppubl, err := GenerateRsaKey()
 	if err != nil {
-		fmt.Println(err)
-		return
+		log.Panicln("服务器本地RSA生成失败")
 	}
-	// 生成公钥
-	publicKey := &privateKey.PublicKey
-	RSA_PRIVATE_LOCAL = privateKey
-	RSA_PUBLIC_LOCAL = publicKey
+	RSA_PRIVATE_LOCAL = priv
+	RSA_PUBLIC_LOCAL = ppubl
 }
 
-// 加密
-func RsaEncrypt(origData []byte, publicKey []byte) ([]byte, error) {
-	//解密pem格式的公钥
-	block, _ := pem.Decode(publicKey)
+// 加密算法（使用PKCS1密钥）
+func Encrypt(origData []byte, publickey []byte) ([]byte, error) {
+	//解密
+	block, _ := pem.Decode(publickey)
 	if block == nil {
-		return nil, errors.New("公钥错误")
+		return nil, errors.New("public key error")
 	}
 	// 解析公钥
-	pubInterface, err := x509.ParsePKIXPublicKey(block.Bytes)
+	pubInterface, err := x509.ParsePKCS1PublicKey(block.Bytes)
 	if err != nil {
 		return nil, err
 	}
-	// 类型断言
-	pub := pubInterface.(*rsa.PublicKey)
-	//加密
-	return rsa.EncryptPKCS1v15(rand.Reader, pub, origData)
+	// 加密
+	return rsa.EncryptPKCS1v15(rand.Reader, pubInterface, origData)
 }
 
 // 解密
-func RsaDecrypt(ciphertext []byte, privateKey []byte) ([]byte, error) {
+func Decrypt(ciphertext []byte, privateKey []byte) ([]byte, error) {
 	//解密
 	block, _ := pem.Decode(privateKey)
 	if block == nil {
@@ -79,8 +76,14 @@ func RsaDecrypt(ciphertext []byte, privateKey []byte) ([]byte, error) {
 	//解析PKCS1格式的私钥
 	priv, err := x509.ParsePKCS1PrivateKey(block.Bytes)
 	if err != nil {
+		log.Println("!!!")
 		return nil, err
 	}
 	// 解密
 	return rsa.DecryptPKCS1v15(rand.Reader, priv, ciphertext)
+}
+
+// 返回服务器公钥字符串
+func GetPublicKey() string {
+	return RSA_PUBLIC_LOCAL
 }

@@ -7,6 +7,20 @@ import (
 	"stvsljl.com/stvsl/Sql"
 )
 
+func setPassHandler(c *gin.Context) {
+	// 获取token中的id信息
+	id := c.GetString("id")
+	// 信息绑定
+	var account Sql.AccountInformations
+	account.ID = id
+	if err := c.ShouldBindJSON(&account); err != nil {
+		CX302(c)
+		return
+	}
+	// 写入
+	account.Update()
+}
+
 func getPassHandler(c *gin.Context) {
 	// 获取token中的id信息
 	id := c.GetString("id")

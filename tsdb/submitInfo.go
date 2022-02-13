@@ -43,8 +43,6 @@ type SubmitInfo struct {
 	BacteriaCount int `json:"BacteriaCount"`
 	// 大肠杆菌数
 	StaphylococcusCount int `json:"StaphylococcusCount"`
-	// 动植物油
-
 }
 
 //解析json，使用json数据实例化SubmitInfo

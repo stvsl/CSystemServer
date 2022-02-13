@@ -3,9 +3,8 @@ package main
 import (
 	"fmt"
 
+	"stvsljl.com/stvsl/RSA"
 	"stvsljl.com/stvsl/Service"
-	"stvsljl.com/stvsl/Sql"
-	"stvsljl.com/stvsl/influxdb"
 )
 
 func main() {
@@ -25,10 +24,18 @@ func start() {
 }
 
 func test() {
-	var x Sql.NodeInformation
-	fmt.Println(x.GetIP("C0000000001"))
-	err := influxdb.ConnectTest()
+	RSA.GenerateLocalRsaKey()
+	test := "121211"
+	enstr, err := RSA.Encrypt([]byte(test), []byte(RSA.RSA_PUBLIC_LOCAL))
 	if err != nil {
 		fmt.Println(err)
+		return
 	}
+	fmt.Println(enstr)
+	destr, err := RSA.Decrypt([]byte(enstr), []byte(RSA.RSA_PRIVATE_LOCAL))
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(string(destr))
 }
