@@ -42,12 +42,28 @@ func GenerateRsaKey() (string, string, error) {
 
 // 生成服务器本地密钥对
 func GenerateLocalRsaKey() {
-	priv, ppubl, err := GenerateRsaKey()
+	// 生成私钥
+	privateKey, err := rsa.GenerateKey(rand.Reader, 1024)
 	if err != nil {
-		log.Panicln("服务器本地RSA生成失败")
+		return
 	}
-	RSA_PRIVATE_LOCAL = priv
-	RSA_PUBLIC_LOCAL = ppubl
+	// 生成公钥
+	publicKey := &privateKey.PublicKey
+	// 生成pem格式的密钥
+	privateKeyPem := pem.EncodeToMemory(
+		&pem.Block{
+			Type:  "RSA PRIVATE KEY",
+			Bytes: x509.MarshalPKCS1PrivateKey(privateKey),
+		},
+	)
+	publicKeyPem := pem.EncodeToMemory(
+		&pem.Block{
+			Type:  "RSA PUBLIC KEY",
+			Bytes: x509.MarshalPKCS1PublicKey(publicKey),
+		},
+	)
+	RSA_PRIVATE_LOCAL = string(privateKeyPem)
+	RSA_PUBLIC_LOCAL = string(publicKeyPem)
 }
 
 // 加密算法（使用PKCS1密钥）

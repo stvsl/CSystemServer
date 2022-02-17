@@ -6,6 +6,7 @@ require stvsljl.com/stvsl/Service v0.0.0
 
 require (
 	golang.org/x/text v0.3.7 // indirect
+	stvsljl.com/stvsl/AES v0.0.0 // indirect
 	stvsljl.com/stvsl/Sql v0.0.0 //indirect
 )
 
@@ -49,3 +50,5 @@ replace stvsljl.com/stvsl/influxdb v0.0.0 => ./tsdb
 replace stvsljl.com/stvsl/Sql v0.0.0 => ./db
 
 replace stvsljl.com/stvsl/RSA v0.0.0 => ./rsa
+
+replace stvsljl.com/stvsl/AES v0.0.0 => ./aes

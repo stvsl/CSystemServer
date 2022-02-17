@@ -15,16 +15,16 @@ import (
 func pingpostHandler(c *gin.Context) {
 	// 解析json数据
 	var j struct {
-		MD51    string `json:"KEY"`
+		AES1    string `json:"KEY"`
 		FEATURE string `json:"FEATURE"`
 		RSA     string `json:"RSA"`
 	}
 	c.BindJSON(&j)
 	// base64解密
-	demd51, _ := base64.StdEncoding.DecodeString(j.MD51)
+	deAES1, _ := base64.StdEncoding.DecodeString(j.AES1)
 	defeature, _ := base64.StdEncoding.DecodeString(j.FEATURE)
 	// 解密数据
-	md51byte, err := RSA.Decrypt(demd51, []byte(RSA.RSA_PRIVATE_LOCAL))
+	AES1byte, err := RSA.Decrypt(deAES1, []byte(RSA.RSA_PRIVATE_LOCAL))
 	if err != nil {
 		CX304(c)
 		return
@@ -40,22 +40,22 @@ func pingpostHandler(c *gin.Context) {
 	for i := 0; i < 15; i++ {
 		result = append(result, bytes[rand.Intn(len(bytes))])
 	}
-	md52 := string(result)
-	md5str := string(md51byte) + md52
+	AES2 := string(result)
+	AESstr := string(AES1byte) + AES2
 	// 加密并返回字符串
-	retmd52, _ := RSA.Encrypt([]byte(md52), []byte(j.RSA))
+	retAES2, _ := RSA.Encrypt([]byte(AES2), []byte(j.RSA))
 	c.JSON(200, gin.H{
 		"code":    "CX200",
 		"message": "success",
-		"KEY":     retmd52,
+		"KEY":     retAES2,
 	})
-	// 计算md5
-	md5_md5 := md5.Sum([]byte(md5str))
+	// 计算AES
+	AES_AES := md5.Sum([]byte(AESstr))
 	// 保存到数据库
 	var l Sql.Logining
 	l.TIME = time.Now()
 	l.FEATURE = string(featurebyte)
-	l.MD5KEY = fmt.Sprintf("%x", md5_md5)
+	l.AESKEY = fmt.Sprintf("%x", AES_AES)
 	l.Write()
 }
 

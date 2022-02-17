@@ -22,6 +22,7 @@ type AccountInformations struct {
 	USERLOCATE   string `gorm:"column:USER_LOCATE" json:"uSERLOCATE"`    // 家庭住址
 	ORGANIZATION string `gorm:"column:ORGANIZATION" json:"oRGANIZATION"` // 所属机构代码
 	RSAPUBLIC    string `gorm:"column:RSA_PUBLIC" json:"rSAPUBLIC"`      // PSA公钥
+	AES          string `gorm:"column:AES" json:"aes"`                   // AES密钥
 	STATUS       int    `gorm:"column:STATUS" json:"sTATUS"`             // 账户状态
 }
 
@@ -105,7 +106,6 @@ func (accountInformations AccountInformations) GetPasswdFragment(id string) (str
 	if err != nil {
 		return "", err
 	}
-	// 查询其PasswdFragment信息
 	var account AccountInformations
 	db.Where("ID = ?", id).Find(&account)
 	str := account.PASSWD

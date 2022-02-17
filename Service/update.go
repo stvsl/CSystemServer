@@ -13,14 +13,14 @@ type version struct {
 	Version string `json:"version"` // 版本号
 	Date    string `json:"date"`    //更新日期
 	Desc    string `json:"desc"`    //更新描述
-	MD5     string `json:"md5"`     //更新包md5
+	AES     string `json:"AES"`     //更新包AES
 }
 
 var latestVersion = version{
 	Version: "0.0.1",
 	Date:    "2022.2.3",
 	Desc:    "测试版本",
-	MD5:     "0000000000",
+	AES:     "0000000000",
 }
 
 func updateHandler(c *gin.Context) {

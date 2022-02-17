@@ -8,7 +8,7 @@ import (
 type Logining struct {
 	TIME    time.Time `gorm:"column:TIME"`    // 记录时间
 	FEATURE string    `gorm:"column:FEATURE"` // 客户端特征
-	MD5KEY  string    `gorm:"column:MD5_KEY"` // 通信密钥
+	AESKEY  string    `gorm:"column:AES_KEY"` // 通信密钥
 }
 
 // 写入数据库
@@ -26,11 +26,11 @@ func (l Logining) Read(feature string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	err = db.Where("FEATURE = ?", feature).Find(l).Error
+	err = db.Where("FEATURE = ?", feature).Find(&l).Error
 	if err != nil {
 		return "", err
 	}
-	return l.MD5KEY, nil
+	return l.AESKEY, nil
 }
 
 // 删除密钥
