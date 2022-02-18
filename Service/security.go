@@ -3,6 +3,7 @@ package Service
 import (
 	"encoding/base64"
 	"errors"
+	"fmt"
 	"net/http"
 	"strings"
 	"time"
@@ -17,15 +18,17 @@ import (
 const TokenExpireDuration = time.Hour * 2 // token过期时间
 
 type Claims struct {
-	ID string `json:"id"`
+	ID  string `json:"id"`
+	AES string `json:"aes"`
 	jwt.StandardClaims
 }
 
 // 生成jwt
-func GenToken(id string) (string, error) {
+func GenToken(id string, aes string) (string, error) {
 	// 创建声明
 	c := Claims{
 		id,
+		aes,
 		jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(TokenExpireDuration).Unix(),
 			NotBefore: time.Now().Unix() - 10,
@@ -39,18 +42,21 @@ func GenToken(id string) (string, error) {
 
 // 解析jwt
 func ParseToken(tokenstr string) (*Claims, error) {
-	//  解析token
-	token, err := jwt.ParseWithClaims(tokenstr, &Claims{}, func(token *jwt.Token) (i interface{}, err error) {
-		return RSA.RSA_PUBLIC_LOCAL, nil
+	// 解析token
+	token, err := jwt.ParseWithClaims(tokenstr, &Claims{}, func(token *jwt.Token) (interface{}, error) {
+		// 这里的密钥要和生成的密钥一致
+		return RSA.RSA_PUBLIC_LOCAL_BYTES, nil
 	})
 	if err != nil {
+		fmt.Println("解析token失败")
 		return nil, err
 	}
-	// 校验token
 	if claims, ok := token.Claims.(*Claims); ok && token.Valid {
 		return claims, nil
+	} else {
+		fmt.Println("token无效")
+		return nil, errors.New("token无效")
 	}
-	return nil, errors.New("token异常")
 }
 
 // 签发token密钥
@@ -110,15 +116,22 @@ func authHandler(c *gin.Context) {
 		CX003(c)
 		return
 	}
-	// 签发token
-	tokens, _ := GenToken(idstr)
 	// 从loginings中删除暂存记录
 	l := Sql.Logining{}
 	aes, err := l.Read(featurestr) // 导出暂存记录
+	// 签发token
+	tokens, _ := GenToken(idstr, aes)
 	if err != nil {
 		CX401(c)
 		return
 	}
+	// 更新aes信息
+	a := Sql.AccountInformations{}
+	a.UpdateAES(idstr, aes)
+
+	// 删除暂存记录
+	l.FEATURE = featurestr
+	l.Delete()
 	// token使用AES加密
 	token, _ := AES.AesEncrypt([]byte(tokens), []byte(aes))
 	// base64编码
@@ -154,6 +167,7 @@ func AuthMiddleware() func(c *gin.Context) {
 		}
 		// 将当前请求的信息保存到请求的上下文c上
 		c.Set("id", message.ID)
+		c.Set("aes", message.AES)
 		c.Next()
 	}
 }

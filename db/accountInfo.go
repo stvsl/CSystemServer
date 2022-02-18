@@ -14,16 +14,15 @@ import (
 
 type AccountInformations struct {
 	ID           string `gorm:"column:ID" json:"id"`                     // 账户ID
-	TYPE         int    `gorm:"column:TYPE" json:"tYPE"`                 // 账户类型
+	TYPE         int    `gorm:"column:TYPE" json:"type"`                 // 账户类型
 	PASSWD       string `gorm:"column:PASSWD" json:"passwd"`             // 账户密码
 	FRAGMENT     string `gorm:"column:FRAGMENT" json:"fragment"`         // 密码残片
-	USERNAME     string `gorm:"column:USER_NAME" json:"uSERNAME"`        // 用户姓名
-	USERID       string `gorm:"column:USER_ID" json:"uSERId"`            // 身份证号
-	USERLOCATE   string `gorm:"column:USER_LOCATE" json:"uSERLOCATE"`    // 家庭住址
-	ORGANIZATION string `gorm:"column:ORGANIZATION" json:"oRGANIZATION"` // 所属机构代码
-	RSAPUBLIC    string `gorm:"column:RSA_PUBLIC" json:"rSAPUBLIC"`      // PSA公钥
+	USERNAME     string `gorm:"column:USER_NAME" json:"username"`        // 用户姓名
+	USERID       string `gorm:"column:USER_ID" json:"userid"`            // 身份证号
+	USERLOCATE   string `gorm:"column:USER_LOCATE" json:"userlocate"`    // 家庭住址
+	ORGANIZATION string `gorm:"column:ORGANIZATION" json:"organization"` // 所属机构代码
 	AES          string `gorm:"column:AES" json:"aes"`                   // AES密钥
-	STATUS       int    `gorm:"column:STATUS" json:"sTATUS"`             // 账户状态
+	STATUS       int    `gorm:"column:STATUS" json:"status"`             // 账户状态
 }
 
 // 根据ID获取账户信息
@@ -32,10 +31,9 @@ func (accountInformations AccountInformations) Get(id string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	var account AccountInformations
-	db.Where("ID = ?", id).Find(&account)
+	db.Where("ID = ?", id).Find(&accountInformations)
 	// 转换为JSON
-	accountJSON, err := json.Marshal(account)
+	accountJSON, err := json.Marshal(accountInformations)
 	if err != nil {
 		return "", err
 	}
@@ -85,6 +83,17 @@ func (accountInformations AccountInformations) Delete(id string) error {
 		return err
 	}
 	db.Where("ID = ?", id).Delete(&accountInformations)
+	return nil
+}
+
+// 实现AccountInfo接口的UpdateAES方法
+// 更新指定ID的账户AES信息
+func (accountInformations AccountInformations) UpdateAES(id string, aes string) error {
+	db, err := GetDB()
+	if err != nil {
+		return err
+	}
+	db.Model(&accountInformations).Where("ID = ?", id).Update("AES", aes)
 	return nil
 }
 

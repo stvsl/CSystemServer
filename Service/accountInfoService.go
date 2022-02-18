@@ -1,9 +1,11 @@
 package Service
 
 import (
+	"encoding/base64"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"stvsljl.com/stvsl/AES"
 	"stvsljl.com/stvsl/Sql"
 )
 
@@ -51,11 +53,17 @@ func myAccountGetHandler(c *gin.Context) {
 		CX101(c)
 		return
 	}
+	// 获取token中的aes信息
+	aes := c.GetString("aes")
+	// AES加密查询结果
+	enstr, _ := AES.AesEncrypt([]byte(str), []byte(aes))
+	// base64
+	str64 := base64.StdEncoding.EncodeToString(enstr)
 	// 返回查询结果
 	c.JSON(http.StatusOK, gin.H{
 		"code":    "CX200",
 		"message": "success",
-		"data":    str,
+		"data":    str64,
 	})
 }
 

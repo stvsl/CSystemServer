@@ -2,6 +2,7 @@ package Service
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 	"strings"
 	"time"
@@ -125,6 +126,7 @@ func NodeAuthMiddleware() func(c *gin.Context) {
 		// 解析token部分
 		message, err := ParseToken(parts[1])
 		if err != nil {
+			fmt.Println(err)
 			CX007(c)
 			c.Abort()
 			return

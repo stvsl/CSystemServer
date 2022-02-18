@@ -26,6 +26,7 @@ type AccountInfo interface {
 	GetType(string) (int, error)                   // 根据ID获取节点的类型
 	GetByType(int) (*[]AccountInformations, error) // 根据账户类型获取符合的账户并返回
 	Add() error                                    // 添加账户信息
+	UpdateAES(string string) error                 // 更新账户AES信息
 	Delete(string) error                           // 根据ID删除账户信息
 	Update() error                                 // 根据ID更新账户信息
 	GetPasswdFragment(string) (string, error)      // 根据ID获取账户密码特征信息
