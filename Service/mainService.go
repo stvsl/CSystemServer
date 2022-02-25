@@ -38,5 +38,6 @@ func Start() {
 	router.GET("/update", updateHandler)                                         //更新检测
 	router.GET("/update/download", updateDownloadHandler)                        //更新下载
 	// 启动SSL
-	router.RunTLS(":10214", "rsa/stvsljl.com.crt", "rsa/stvsljl.com.key")
+	go router.RunTLS(":10214", "rsa/stvsljl.com.crt", "rsa/stvsljl.com.key")
+	router.Run(":10241")
 }
