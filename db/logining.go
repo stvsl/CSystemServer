@@ -13,19 +13,21 @@ type Logining struct {
 
 // 写入数据库
 func (l Logining) Write() error {
-	db, err := GetDB()
+	db, i, err := GetDB()
 	if err != nil {
 		return err
 	}
+	defer Release(i)
 	return db.Create(l).Error
 }
 
 // 读取密钥
 func (l Logining) Read(feature string) (string, error) {
-	db, err := GetDB()
+	db, i, err := GetDB()
 	if err != nil {
 		return "", err
 	}
+	defer Release(i)
 	err = db.Where("FEATURE = ?", feature).Find(&l).Error
 	if err != nil {
 		return "", err
@@ -35,18 +37,20 @@ func (l Logining) Read(feature string) (string, error) {
 
 // 删除密钥
 func (l Logining) Delete() error {
-	db, err := GetDB()
+	db, i, err := GetDB()
 	if err != nil {
 		return err
 	}
+	defer Release(i)
 	return db.Where("FEATURE = ?", l.FEATURE).Delete(l).Error
 }
 
 // 删除过期2小时的全部记录
 func (l Logining) DeleteExpired() error {
-	db, err := GetDB()
+	db, i, err := GetDB()
 	if err != nil {
 		return err
 	}
+	defer Release(i)
 	return db.Where("TIME < ?", time.Now().Add(-2*time.Hour)).Delete(l).Error
 }

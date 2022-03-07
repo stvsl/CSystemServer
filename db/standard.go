@@ -74,10 +74,11 @@ type StandardInfo interface {
 
 // 实现standardInfo接口的Add方法
 func (s *Standard) Add() error {
-	db, err := GetDB()
+	db, i, err := GetDB()
 	if err != nil {
 		return err
 	}
+	defer Release(i)
 	// 写入数据库
 	if err := db.Create(s).Error; err != nil {
 		log.Panicln("写入数据库失败：", err)
@@ -88,10 +89,11 @@ func (s *Standard) Add() error {
 
 // 实现standardInfo接口的Delete方法
 func (s *Standard) Delete() error {
-	db, err := GetDB()
+	db, i, err := GetDB()
 	if err != nil {
 		return err
 	}
+	defer Release(i)
 	// 删除数据库
 	if err := db.Delete(s).Error; err != nil {
 		log.Panicln("删除数据库失败：", err)
@@ -102,10 +104,11 @@ func (s *Standard) Delete() error {
 
 // 实现standardInfo接口的Get方法
 func (s *Standard) Get() (string, error) {
-	db, err := GetDB()
+	db, i, err := GetDB()
 	if err != nil {
 		return "", err
 	}
+	defer Release(i)
 	// 存储查询集合
 	var standards []Standard
 	// 获取数据库全部数据

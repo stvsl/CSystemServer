@@ -46,26 +46,10 @@
         // 添加3D控件
         var navi3DCtrl = new BMapGL.NavigationControl3D();
         map.addControl(navi3DCtrl);
-        var point = new BMapGL.Point(116.404, 39.915);
-        var marker = new BMapGL.Marker(point);        // 创建标注   
-        map.addOverlay(marker);
-        marker.addEventListener("click", function () {
-            map.addEventListener('click', handleClick);
-            function handleClick(e) {
-                alert('点击的经纬度：' + e.latlng.lng + ', ' + e.latlng.lat);
-                var mercator = map.lnglatToMercator(e.latlng.lng, e.latlng.lat);
-                alert('点的墨卡托坐标：' + mercator[0] + ', ' + mercator[1]);
-                map.removeEventListener('click', handleClick);
-            }
-            
-        });
-
 
         //qt通信组件实例化
         new QWebChannel(qt.webChannelTransport, function (channel) {
             /*函数绑定*/
-            //地图中心重设
-            channel.objects.trans.setCenter.connect(setCenter);
             //地图poi文字显示设置
             channel.objects.trans.setPoiText.connect(setPoiText);
             //地图poi图标显示设置
@@ -76,11 +60,13 @@
             channel.objects.trans.setMapType.connect(setMapType);
             //跳转到指定位置
             channel.objects.trans.setCenter.connect(setCenter);
+            //添加节点
+            channel.objects.trans.addPoint.connect(addPoint);
         })
 
         //设置中央位置
-        function setCenter() {
-            var point = new BMapGL.Point(200.500, 70.915);
+        function setCenter(x, y) {
+            var point = new BMapGL.Point(x, y);
             map.centerAndZoom(point, 15);
             map.setZoom(20);
         }
@@ -122,6 +108,19 @@
         //卫星地球模式
         function setMapType() {
             map.setMapType(BMAP_EARTH_MAP);
+        }
+
+        //添加结点显示
+        function addPoint(info, x, y) {
+            var point = new BMapGL.Point(x, y);
+            var marker = new BMapGL.Marker(point);
+            map.addOverlay(marker);
+            marker.setTitle(name);
+            // 点击后显示详情
+            marker.addEventListener("click", function () {
+                var infoWindow = new BMapGL.InfoWindow(info);
+                this.openInfoWindow(infoWindow);
+            });
         }
 
     </script>

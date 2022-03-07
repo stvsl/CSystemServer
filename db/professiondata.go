@@ -66,37 +66,41 @@ type Professiondata struct {
 
 // 添加记录
 func (professiondata Professiondata) Add() error {
-	db, err := GetDB()
+	db, i, err := GetDB()
 	if err != nil {
 		return err
 	}
+	defer Release(i)
 	return db.Create(&professiondata).Error
 }
 
 // 修改记录
 func (professiondata Professiondata) Update() error {
-	db, err := GetDB()
+	db, i, err := GetDB()
 	if err != nil {
 		return err
 	}
+	defer Release(i)
 	return db.Save(&professiondata).Error
 }
 
 // 删除记录
 func (professiondata Professiondata) Delete() error {
-	db, err := GetDB()
+	db, i, err := GetDB()
 	if err != nil {
 		return err
 	}
+	defer Release(i)
 	return db.Delete(&professiondata).Error
 }
 
 // 查询从XX年XX月XX日到XX年XX月XX日id为XXX的多个节点的记录并返回长度
 func (professiondata Professiondata) GetByTime(id []string, startTime, endTime string) ([]*Professiondata, int, error) {
-	db, err := GetDB()
+	db, i, err := GetDB()
 	if err != nil {
 		return nil, 0, err
 	}
+	defer Release(i)
 	var professiondatas []*Professiondata
 	// 依次查询每个id的记录
 	for _, v := range id {

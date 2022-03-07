@@ -21,20 +21,22 @@ type OperationRecords struct {
 
 // 实现OperationRecordsInterface接口的Insert方法
 func (operationRecords *OperationRecords) Insert() error {
-	db, err := GetDB()
+	db, i, err := GetDB()
 	if err != nil {
 		return err
 	}
+	defer Release(i)
 	db.Create(&operationRecords)
 	return nil
 }
 
 // 实现OperationRecordsInterface接口的GetByID方法
 func (operationRecords *OperationRecords) GetByID(accountID string) (string, error) {
-	db, err := GetDB()
+	db, i, err := GetDB()
 	if err != nil {
 		return "", err
 	}
+	defer Release(i)
 	// 保存查询集合
 	var operationRecordsList []OperationRecords
 	// 查询
@@ -50,10 +52,11 @@ func (operationRecords *OperationRecords) GetByID(accountID string) (string, err
 
 // 实现OperationRecordsInterface接口的GetByTime方法
 func (operationRecords *OperationRecords) GetByTime(startTime, endTime string) (string, error) {
-	db, err := GetDB()
+	db, i, err := GetDB()
 	if err != nil {
 		return "", err
 	}
+	defer Release(i)
 	// 保存查询集合
 	var operationRecordsList []OperationRecords
 	// 将string转换为time
@@ -80,10 +83,11 @@ func (operationRecords *OperationRecords) GetByTime(startTime, endTime string) (
 
 // 实现OperationRecordsInterface接口的GetResult方法
 func (operationRecords *OperationRecords) GetResult(accountID string) (string, error) {
-	db, err := GetDB()
+	db, i, err := GetDB()
 	if err != nil {
 		return "", err
 	}
+	defer Release(i)
 	// 保存查询集合
 	var result []string
 	// 查询
@@ -99,10 +103,11 @@ func (operationRecords *OperationRecords) GetResult(accountID string) (string, e
 
 // 实现OperationRecordsInterface接口的Delete方法
 func (operationRecords *OperationRecords) Delete(outtime string) error {
-	db, err := GetDB()
+	db, i, err := GetDB()
 	if err != nil {
 		return err
 	}
+	defer Release(i)
 	// 将string转换为time
 	outtimeTime, err := time.Parse("2006-01-02 15:04:05", outtime)
 	if err != nil {

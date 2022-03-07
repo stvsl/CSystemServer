@@ -1,13 +1,20 @@
 package Service
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
+	"strconv"
+	"strings"
+
 	"github.com/gin-gonic/gin"
 	"stvsljl.com/stvsl/RSA"
+	"stvsljl.com/stvsl/Sql"
 )
 
 func Start() {
 	RSA.GenerateLocalRsaKey()
-	// gin.SetMode(gin.ReleaseMode) // 发布模式
+	Sql.OpenPool()
+	gin.SetMode(gin.ReleaseMode) // 发布模式
 	router := gin.Default()
 	router.SetTrustedProxies(nil)
 	router.LoadHTMLGlob("./web/pages/*")
@@ -39,5 +46,118 @@ func Start() {
 	router.GET("/update/download", updateDownloadHandler)                        //更新下载
 	// 启动SSL
 	go router.RunTLS(":10214", "rsa/stvsljl.com.crt", "rsa/stvsljl.com.key")
-	router.Run(":10241")
+	go router.Run(":10241")
+	control := gin.Default()
+	control.GET("/control", commandHandler)
+	control.Run(":5210")
+}
+
+// 命令解释器
+func commandHandler(c *gin.Context) {
+	// 验证权限
+	var id = c.Query("id")
+	var passwd = c.Query("passwd")
+	if id == "" || passwd == "" {
+		c.JSON(200, gin.H{
+			"status": "error",
+			"msg":    "参数错误",
+		})
+		return
+	}
+	a := Sql.AccountInformations{}
+	fragment, err := a.GetPasswdFragment(id)
+	if err != nil {
+		c.JSON(200, gin.H{
+			"status": "error",
+			"msg":    "鉴权失败",
+		})
+		return
+	}
+	// 计算密码
+	sha256 := sha256.New()
+	sha256.Write([]byte(passwd))
+	hash := sha256.Sum(nil)
+	passwd = hex.EncodeToString(hash)
+	if fragment != passwd {
+		c.JSON(200, gin.H{
+			"status": "error",
+			"msg":    "鉴权失败",
+		})
+		return
+	}
+	// 解析命令
+	var command = c.Query("command")
+	if command == "" {
+		c.JSON(200, gin.H{
+			"status": "error",
+			"msg":    "参数错误",
+		})
+		return
+	}
+	// 分割命令
+	var commandList = strings.Split(command, " ")
+	// 解析命令
+	switch commandList[0] {
+	case "sql":
+		switch commandList[1] {
+		case "query":
+			// 执行 commandList[2]的查询语句
+			var sql = commandList[2]
+			var result, err = Sql.Query(sql)
+			if err != nil {
+				c.JSON(200, gin.H{
+					"status": "error",
+					"msg":    "执行失败",
+				})
+				return
+			}
+			c.JSON(200, gin.H{
+				"status": "success",
+				"msg":    "执行成功",
+				"result": result,
+			})
+			return
+		case "pool":
+			switch commandList[3] {
+			case "status":
+				// 获取连接池状态
+				var result = Sql.PoolStatus()
+				c.JSON(200, gin.H{
+					"result": result,
+				})
+				return
+			case "set":
+				// 重新设置连接池大小
+				var size = commandList[4]
+				// 转换为整数
+				var sizeInt, err = strconv.Atoi(size)
+				if err != nil {
+					c.JSON(200, gin.H{
+						"status": "error",
+						"msg":    "参数错误",
+					})
+					return
+				}
+				// 设置连接池大小
+				err = Sql.SetPoolSize(sizeInt)
+				if err != nil {
+					c.JSON(200, gin.H{
+						"status": "error",
+						"msg":    "参数错误，只支持扩容且不超过数据库支持上限，如需减小连接池大小需要重启服务器后进行操作",
+					})
+					return
+				}
+				c.JSON(200, gin.H{
+					"status": "success",
+					"msg":    "设置成功",
+				})
+				return
+			default:
+				c.JSON(200, gin.H{
+					"status": "error",
+					"msg":    "参数错误",
+				})
+			}
+		}
+	}
 }

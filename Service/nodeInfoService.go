@@ -28,7 +28,6 @@ func nodeInfoAbsoluteHandler(c *gin.Context) {
 			CX101(c)
 			return
 		}
-
 		CX301(c)
 		return
 	}

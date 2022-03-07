@@ -17,10 +17,11 @@ type Organization struct {
 // 实现OrganizationInfo接口的Insert方法
 // 新增企业信息
 func (o Organization) Insert() error {
-	db, err := GetDB()
+	db, i, err := GetDB()
 	if err != nil {
 		return err
 	}
+	defer Release(i)
 	// 写入数据库
 	db.Create(o)
 	return nil
@@ -29,10 +30,11 @@ func (o Organization) Insert() error {
 // 实现OrganizationInfo接口的Update方法
 // 更新企业信息
 func (o Organization) Update() error {
-	db, err := GetDB()
+	db, i, err := GetDB()
 	if err != nil {
 		return err
 	}
+	defer Release(i)
 	// 更新数据库
 	db.Save(o)
 	return nil
@@ -41,10 +43,11 @@ func (o Organization) Update() error {
 // 实现OrganizationInfo接口的Delete方法
 // 删除企业信息
 func (o Organization) Delete(id string) error {
-	db, err := GetDB()
+	db, i, err := GetDB()
 	if err != nil {
 		return err
 	}
+	defer Release(i)
 	// 删除数据库
 	db.Delete(o, id)
 	return nil
@@ -52,10 +55,11 @@ func (o Organization) Delete(id string) error {
 
 // 实现OrganizationInfo接口的GetByID方法
 func (o Organization) GetByID(id string) (*Organization, error) {
-	db, err := GetDB()
+	db, i, err := GetDB()
 	if err != nil {
 		return nil, err
 	}
+	defer Release(i)
 	// 查询数据库
 	db.Where("id = ?", id).Find(o)
 	return &o, nil
@@ -64,10 +68,11 @@ func (o Organization) GetByID(id string) (*Organization, error) {
 // 实现OrganizationInfo接口的GetByName方法
 // 根据企业名称获取企业信息
 func (o Organization) GetByName(name string) (*[]Organization, error) {
-	db, err := GetDB()
+	db, i, err := GetDB()
 	if err != nil {
 		return nil, err
 	}
+	defer Release(i)
 	// 保存结果集合
 	var result []Organization
 	// 模糊查询数据库
@@ -78,10 +83,11 @@ func (o Organization) GetByName(name string) (*[]Organization, error) {
 // 实现OrganizationInfo接口的GetByType方法
 // 根据企业类型获取企业信息
 func (o Organization) GetByType(typee string) (*[]Organization, error) {
-	db, err := GetDB()
+	db, i, err := GetDB()
 	if err != nil {
 		return nil, err
 	}
+	defer Release(i)
 	// 保存结果集合
 	var result []Organization
 	// 查询数据库
@@ -92,10 +98,11 @@ func (o Organization) GetByType(typee string) (*[]Organization, error) {
 // 实现OrganizationInfo接口的GetByStandard方法
 // 根据服从标准获取企业信息
 func (o Organization) GetByStandard(standard string) (*[]Organization, error) {
-	db, err := GetDB()
+	db, i, err := GetDB()
 	if err != nil {
 		return nil, err
 	}
+	defer Release(i)
 	// 保存结果集合
 	var result []Organization
 	// 查询数据库
