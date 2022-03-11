@@ -2,10 +2,8 @@ package influxdb
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"log"
-	"strings"
 	"time"
 
 	influxdb2 "github.com/influxdata/influxdb-client-go/v2"
@@ -14,10 +12,10 @@ import (
 // 通讯channel
 
 func Write(submit *SubmitInfo) error {
-	err := ConnectTest
-	if err != nil {
-		return err()
-	}
+	// err := ConnectTest
+	// if err != nil {
+	// 	return err()
+	// }
 	// 创建客户端
 	client := influxdb2.NewClient("http://127.0.0.1:8086", "3TRkGcboToJkMfoPUwvuVvC0Rn1Tstzq5beZAjyv-MscinJA43c0ZIdW70eapXCB5MRTlwQ92VkDMs-Qs6yfDw==")
 	//获取非阻塞写入客户端
@@ -44,8 +42,10 @@ func Write(submit *SubmitInfo) error {
 		AddField("StaphylococcusCount", submit.StaphylococcusCount).
 		SetTime(time.Now())
 	// 异步写入点
+	fmt.Println(p)
 	writeAPI.WritePoint(p)
 	//刷新写入
+	fmt.Println("flush")
 	writeAPI.Flush()
 	//总是在最后关闭客户端
 	defer client.Close()
@@ -58,35 +58,40 @@ func Query(nodeid []string, startTime, endTime string) (string, error) {
 	client := influxdb2.NewClient("http://127.0.0.1:8086", "3TRkGcboToJkMfoPUwvuVvC0Rn1Tstzq5beZAjyv-MscinJA43c0ZIdW70eapXCB5MRTlwQ92VkDMs-Qs6yfDw==")
 	//获取非阻塞写入客户端
 	queryAPI := client.QueryAPI("stvsl-jc")
-	// 查询nodeid里面所有节点的数据
-	query := `from(bucket:"stvsljc")|> range(start: -1h) |> filter(fn: (r) => r._measurement == "data" and r.ID in ("` + strings.Join(nodeid, `","`) + `") and r._time >= "` + startTime + `" and r._time <= "` + endTime + `")`
+	query := `from(bucket: "stvsljc")
+	|> range(start: -1h) 
+	|> filter(fn: (r) => r["_measurement"] == "data")
+	|> filter(fn: (r) => r["ID"] == "CX0000001")
+	|> pivot(rowKey: ["_time"], columnKey: ["_field"], valueColumn: "_value")`
 	//获取查询表结果
 	result, err := queryAPI.Query(context.Background(), query)
 	if err != nil {
-		log.Panicln("query error:", err)
-		return "", err
-	}
-	//检查是否有错误
-	if result.Err() != nil {
-		log.Panicln("query error:", result.Err())
-		return "", result.Err()
+		return "查询失败", err
 	}
 	//总是在最后关闭客户端
 	defer client.Close()
-
-	// Iterate over query response
-	var data []string
+	// 打印result
 	for result.Next() {
-		// 模拟打印查询结果
-		data = append(data, result.Record().String())
+		record := result.Record()
+		// fmt.Printf("%v: %v value: %v\n", record.Time(), record.ValueByKey("StaphylococcusCount"), record.Value())
+		fmt.Printf("%v: BacteriaCount %v ", record.Time(), record.ValueByKey("BacteriaCount"))
+		fmt.Printf(" BiologicalOxygenDemand:%v", record.ValueByKey("BiologicalOxygenDemand"))
+		fmt.Printf(" ChemicalOxygenDemand:%v", record.ValueByKey("ChemicalOxygenDemand"))
+		fmt.Printf(" Conductivity:%v", record.ValueByKey("Conductivity"))
+		fmt.Printf(" Density:%v", record.ValueByKey("Density"))
+		fmt.Printf(" FloatingSolidsConcentration:%v", record.ValueByKey("FloatingSolidsConcentration"))
+		fmt.Printf(" GasConcentration:%v", record.ValueByKey("GasConcentration"))
+		fmt.Printf(" MetalConcentration:%v", record.ValueByKey("MetalConcentration"))
+		fmt.Printf(" O2Concentration:%v", record.ValueByKey("OxygenConcentration"))
+		fmt.Printf(" PH:%v", record.ValueByKey("PH"))
+		fmt.Printf(" SolidsConcentration:%v", record.ValueByKey("SolidsConcentration"))
+		fmt.Printf(" TotalNitrogen:%v", record.ValueByKey("TotalNitrogen"))
+		fmt.Printf(" TotalOrganicCarbon:%v", record.ValueByKey("TotalOrganicCarbon"))
+		fmt.Printf(" TotalPhosphorus:%v", record.ValueByKey("TotalPhosphorus"))
+		fmt.Printf("\n")
+		fmt.Println()
 	}
-	// 转换为json
-	jsonData, err := json.Marshal(data)
-	if err != nil {
-		log.Panicln("json error:", err)
-		return "", err
-	}
-	return string(jsonData), nil
+	return "查询成功", nil
 }
 
 func Query2() error {
@@ -95,7 +100,9 @@ func Query2() error {
 	// Get query client
 	queryAPI := client.QueryAPI("stvsl-jc")
 
-	query := `from(bucket:"stvsljc")|> range(start: -1h) |> filter(fn: (r) => r._measurement == "data")`
+	query := `from(bucket:"stvsljc")
+				|> range(start: -1h) 
+				|> filter(fn: (r) => r._measurement == "data")`
 
 	//获取查询表结果
 	result, err := queryAPI.Query(context.Background(), query)
@@ -116,13 +123,12 @@ func Query2() error {
 func ConnectTest() error {
 	//创建客户端
 	client := influxdb2.NewClient("http://127.0.0.1:8086", "3TRkGcboToJkMfoPUwvuVvC0Rn1Tstzq5beZAjyv-MscinJA43c0ZIdW70eapXCB5MRTlwQ92VkDMs-Qs6yfDw==")
-	// 连接测试
-	_, err := client.Ping(context.Background())
-	fmt.Println(err)
-	if err != nil {
-		log.Panicln(err)
-		return err
-	}
+	// // 连接测试
+	// _, err := client.Ping(client)
+	// if err != nil {
+	// 	log.Panicln("connect error:", err)
+	// 	return err
+	// }
 	client.Close()
 	return nil
 }

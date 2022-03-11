@@ -39,7 +39,7 @@ func nodeInfoAbsoluteHandler(c *gin.Context) {
 	})
 }
 
-// stvsljl.com/stvsl/node/info?Locate=北京&Belong&Type=0
+//
 func nodeInfoSendHandler(c *gin.Context) {
 	// 获取query参数
 	Locate := c.Query("Locate")
@@ -93,12 +93,14 @@ func nodeDatainfoHandler(c *gin.Context) {
 		CX101(c)
 		return
 	}
-	//查询时序数据库
+	// 查询时序数据库
 	str, err := influxdb.Query(ids, startTime, endTime)
 	if err != nil {
 		CX301(c)
 		return
 	}
+	// 查询关系数据库
+
 	// 返回查询结果
 	c.JSON(http.StatusOK, gin.H{
 		"code":    "CX200",

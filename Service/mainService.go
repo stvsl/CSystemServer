@@ -26,8 +26,8 @@ func Start() {
 	router.POST("/auth/getauth", authHandler)                                    //客户端获取token
 	router.GET("/passwd/getpass", AuthMiddleware(), getPassHandler)              //获取用户密码残片
 	router.POST("/passwd/getpass", AuthMiddleware(), setPassHandler)             //设置用户密码残片
-	router.GET("/node/info", AuthMiddleware(), nodeInfoSendHandler)              //获取相关节点信息(模糊搜索)
-	router.GET("/node/info/absolute", AuthMiddleware(), nodeInfoAbsoluteHandler) //获取相关节点信息(严格匹配)
+	router.GET("/node/info", AuthMiddleware(), nodeInfoSendHandler)              //获取相关节点信息(联合时序数据库混合搜索)
+	router.GET("/node/info/absolute", AuthMiddleware(), nodeInfoAbsoluteHandler) //获取相关节点信息(仅数据库搜索)
 	router.GET("/node/datainfo", AuthMiddleware(), nodeDatainfoHandler)          //获取相关节点的传感器数据
 	router.GET("/node/psubinfo", AuthMiddleware(), nodePsubinfoHandler)          //获取相关节点的专业机构检测数据数据
 	router.POST("/node/psubinfo", AuthMiddleware(), nodePsubPostHandler)         //上传节点的专业机构检测数据数据

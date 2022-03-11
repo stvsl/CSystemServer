@@ -2,7 +2,7 @@ module stvsljl.com/stvsl/influxdb
 
 go 1.17
 
-require github.com/influxdata/influxdb-client-go/v2 v2.7.0
+require github.com/influxdata/influxdb-client-go/v2 v2.8.0
 
 require stvsljl.com/stvsl/Sql v0.0.0
 
@@ -15,8 +15,8 @@ require (
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.4 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
-	golang.org/x/net v0.0.0-20220127200216-cd36cc0744dd // indirect
+	golang.org/x/net v0.0.0-20220225172249-27dd8689420f // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
-	gorm.io/driver/mysql v1.2.3 // indirect
-	gorm.io/gorm v1.22.5 // indirect
+	gorm.io/driver/mysql v1.3.2 // indirect
+	gorm.io/gorm v1.23.2 // indirect
 )

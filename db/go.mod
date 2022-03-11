@@ -2,9 +2,9 @@ module stvsljl.com/stvsl/Sql
 
 go 1.17
 
-require gorm.io/driver/mysql v1.2.3
+require gorm.io/driver/mysql v1.3.2
 
-require gorm.io/gorm v1.22.5
+require gorm.io/gorm v1.23.2
 
 require (
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
