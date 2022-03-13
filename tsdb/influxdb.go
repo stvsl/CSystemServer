@@ -2,20 +2,17 @@ package influxdb
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
+	"strconv"
 	"time"
 
 	influxdb2 "github.com/influxdata/influxdb-client-go/v2"
 )
 
 // 通讯channel
-
 func Write(submit *SubmitInfo) error {
-	// err := ConnectTest
-	// if err != nil {
-	// 	return err()
-	// }
 	// 创建客户端
 	client := influxdb2.NewClient("http://127.0.0.1:8086", "3TRkGcboToJkMfoPUwvuVvC0Rn1Tstzq5beZAjyv-MscinJA43c0ZIdW70eapXCB5MRTlwQ92VkDMs-Qs6yfDw==")
 	//获取非阻塞写入客户端
@@ -58,40 +55,57 @@ func Query(nodeid []string, startTime, endTime string) (string, error) {
 	client := influxdb2.NewClient("http://127.0.0.1:8086", "3TRkGcboToJkMfoPUwvuVvC0Rn1Tstzq5beZAjyv-MscinJA43c0ZIdW70eapXCB5MRTlwQ92VkDMs-Qs6yfDw==")
 	//获取非阻塞写入客户端
 	queryAPI := client.QueryAPI("stvsl-jc")
-	query := `from(bucket: "stvsljc")
-	|> range(start: -1h) 
-	|> filter(fn: (r) => r["_measurement"] == "data")
-	|> filter(fn: (r) => r["ID"] == "CX0000001")
-	|> pivot(rowKey: ["_time"], columnKey: ["_field"], valueColumn: "_value")`
-	//获取查询表结果
-	result, err := queryAPI.Query(context.Background(), query)
-	if err != nil {
-		return "查询失败", err
-	}
-	//总是在最后关闭客户端
 	defer client.Close()
-	// 打印result
-	for result.Next() {
-		record := result.Record()
-		// fmt.Printf("%v: %v value: %v\n", record.Time(), record.ValueByKey("StaphylococcusCount"), record.Value())
-		fmt.Printf("%v: BacteriaCount %v ", record.Time(), record.ValueByKey("BacteriaCount"))
-		fmt.Printf(" BiologicalOxygenDemand:%v", record.ValueByKey("BiologicalOxygenDemand"))
-		fmt.Printf(" ChemicalOxygenDemand:%v", record.ValueByKey("ChemicalOxygenDemand"))
-		fmt.Printf(" Conductivity:%v", record.ValueByKey("Conductivity"))
-		fmt.Printf(" Density:%v", record.ValueByKey("Density"))
-		fmt.Printf(" FloatingSolidsConcentration:%v", record.ValueByKey("FloatingSolidsConcentration"))
-		fmt.Printf(" GasConcentration:%v", record.ValueByKey("GasConcentration"))
-		fmt.Printf(" MetalConcentration:%v", record.ValueByKey("MetalConcentration"))
-		fmt.Printf(" O2Concentration:%v", record.ValueByKey("OxygenConcentration"))
-		fmt.Printf(" PH:%v", record.ValueByKey("PH"))
-		fmt.Printf(" SolidsConcentration:%v", record.ValueByKey("SolidsConcentration"))
-		fmt.Printf(" TotalNitrogen:%v", record.ValueByKey("TotalNitrogen"))
-		fmt.Printf(" TotalOrganicCarbon:%v", record.ValueByKey("TotalOrganicCarbon"))
-		fmt.Printf(" TotalPhosphorus:%v", record.ValueByKey("TotalPhosphorus"))
-		fmt.Printf("\n")
-		fmt.Println()
+	// 存储结果
+	var suminfos []SubmitInfo
+	// 查询每个节点的数据
+	for _, id := range nodeid {
+		// 查询每个节点的数据
+		query := `from(bucket: "stvsljc")
+			|> range(start: -1h) 
+			|> filter(fn: (r) => r["_measurement"] == "data")
+			|> filter(fn: (r) => r["ID"] == "` + id + `")
+			|> last()
+			|> pivot(rowKey: ["_time"], columnKey: ["_field"], valueColumn: "_value")`
+		//获取查询表结果
+		result, err := queryAPI.Query(context.Background(), query)
+		if err != nil {
+			return "查询失败", err
+		}
+		for result.Next() {
+			record := result.Record()
+			// 转换为结构体实例
+			bacteriaCount, _ := strconv.ParseInt(fmt.Sprint(record.ValueByKey("BacteriaCount")), 10, 64)
+			staphylococcusCount, _ := strconv.ParseInt(fmt.Sprint(record.ValueByKey("StaphylococcusCount")), 10, 64)
+			submitInfo := &SubmitInfo{
+				NodeId:                      id,
+				GasConcentration:            record.ValueByKey("GasConcentration").(float64),
+				Temperature:                 record.ValueByKey("Temperature").(float64),
+				PH:                          record.ValueByKey("PH").(float64),
+				Density:                     record.ValueByKey("Density").(float64),
+				Conductivity:                record.ValueByKey("Conductivity").(float64),
+				OxygenConcentration:         record.ValueByKey("OxygenConcentration").(float64),
+				MetalConcentration:          record.ValueByKey("MetalConcentration").(float64),
+				SolidsConcentration:         record.ValueByKey("SolidsConcentration").(float64),
+				FloatingSolidsConcentration: record.ValueByKey("FloatingSolidsConcentration").(float64),
+				TotalNitrogen:               record.ValueByKey("TotalNitrogen").(float64),
+				TotalPhosphorus:             record.ValueByKey("TotalPhosphorus").(float64),
+				TotalOrganicCarbon:          record.ValueByKey("TotalOrganicCarbon").(float64),
+				BiologicalOxygenDemand:      record.ValueByKey("BiologicalOxygenDemand").(float64),
+				ChemicalOxygenDemand:        record.ValueByKey("ChemicalOxygenDemand").(float64),
+				BacteriaCount:               bacteriaCount,
+				StaphylococcusCount:         staphylococcusCount,
+			}
+			suminfos = append(suminfos, *submitInfo)
+		}
 	}
-	return "查询成功", nil
+	// 转换为json
+	json, err := json.Marshal(suminfos)
+	if err != nil {
+		return "转换失败", err
+	}
+	fmt.Println(string(json))
+	return string(json), nil
 }
 
 func Query2() error {

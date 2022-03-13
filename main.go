@@ -64,8 +64,8 @@ func test() {
 	sub.TotalOrganicCarbon = rand.Float64()
 	sub.BiologicalOxygenDemand = rand.Float64()
 	sub.ChemicalOxygenDemand = rand.Float64()
-	sub.BacteriaCount = rand.Int()
-	sub.StaphylococcusCount = rand.Int()
+	sub.BacteriaCount = (int64)(rand.Float64() * 100)
+	sub.StaphylococcusCount = (int64)(rand.Float64() * 100)
 	err := influxdb.Write(&sub)
 	if err != nil {
 		fmt.Println(err, "!")

@@ -40,9 +40,9 @@ type SubmitInfo struct {
 	// 化学需氧量
 	ChemicalOxygenDemand float64 `json:"ChemicalOxygenDemand"`
 	// 细菌总数
-	BacteriaCount int `json:"BacteriaCount"`
+	BacteriaCount int64 `json:"BacteriaCount"`
 	// 大肠杆菌数
-	StaphylococcusCount int `json:"StaphylococcusCount"`
+	StaphylococcusCount int64 `json:"StaphylococcusCount"`
 }
 
 //解析json，使用json数据实例化SubmitInfo
