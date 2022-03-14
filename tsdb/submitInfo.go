@@ -26,23 +26,23 @@ type SubmitInfo struct {
 	// 重金属
 	MetalConcentration float64 `json:"MetalConcentration"`
 	// 溶解性固体
-	SolidsConcentration float64 `json:"SolidsConcentration"`
+	SC float64 `json:"SC"`
 	// 悬浮性固体
-	FloatingSolidsConcentration float64 `json:"FloatingSolidsConcentration"`
+	FSC float64 `json:"FSC"`
 	// 总氮
-	TotalNitrogen float64 `json:"TotalNitrogen"`
+	TN float64 `json:"TN"`
 	// 总磷
-	TotalPhosphorus float64 `json:"TotalPhosphorus"`
+	TP float64 `json:"TP"`
 	// 总有机碳
-	TotalOrganicCarbon float64 `json:"TotalOrganicCarbon"`
+	TOC float64 `json:"TOC"`
 	// 生物需氧量
-	BiologicalOxygenDemand float64 `json:"BiologicalOxygenDemand"`
+	BOD float64 `json:"BOD"`
 	// 化学需氧量
-	ChemicalOxygenDemand float64 `json:"ChemicalOxygenDemand"`
+	COD float64 `json:"COD"`
 	// 细菌总数
-	BacteriaCount int64 `json:"BacteriaCount"`
+	BC int64 `json:"BC"`
 	// 大肠杆菌数
-	StaphylococcusCount int64 `json:"StaphylococcusCount"`
+	SLC int64 `json:"SLC"`
 }
 
 //解析json，使用json数据实例化SubmitInfo
@@ -93,40 +93,40 @@ func (submitInfo SubmitInfo) Check() bool {
 	if c[6] == '1' && submitInfo.MetalConcentration == 0 {
 		result = false
 	}
-	//submitInfo的checkValue的第八位是否为1且SolidsConcentration为0
-	if c[7] == '1' && submitInfo.SolidsConcentration == 0 {
+	//submitInfo的checkValue的第八位是否为1且SC为0
+	if c[7] == '1' && submitInfo.SC == 0 {
 		result = false
 	}
-	//submitInfo的checkValue的第九位是否为1且FloatingSolidsConcentration为0
-	if c[8] == '1' && submitInfo.FloatingSolidsConcentration == 0 {
+	//submitInfo的checkValue的第九位是否为1且FSC为0
+	if c[8] == '1' && submitInfo.FSC == 0 {
 		result = false
 	}
-	//submitInfo的checkValue的第十位是否为1且TotalNitrogen为0
-	if c[9] == '1' && submitInfo.TotalNitrogen == 0 {
+	//submitInfo的checkValue的第十位是否为1且TN为0
+	if c[9] == '1' && submitInfo.TN == 0 {
 		result = false
 	}
-	//submitInfo的checkValue的第十一位是否为1且TotalPhosphorus为0
-	if c[10] == '1' && submitInfo.TotalPhosphorus == 0 {
+	//submitInfo的checkValue的第十一位是否为1且TP为0
+	if c[10] == '1' && submitInfo.TP == 0 {
 		result = false
 	}
-	//submitInfo的checkValue的第十二位是否为1且TotalOrganicCarbon为0
-	if c[11] == '1' && submitInfo.TotalOrganicCarbon == 0 {
+	//submitInfo的checkValue的第十二位是否为1且TOC为0
+	if c[11] == '1' && submitInfo.TOC == 0 {
 		result = false
 	}
-	//submitInfo的checkValue的第十三位是否为1且BiologicalOxygenDemand为0
-	if c[12] == '1' && submitInfo.BiologicalOxygenDemand == 0 {
+	//submitInfo的checkValue的第十三位是否为1且BOD为0
+	if c[12] == '1' && submitInfo.BOD == 0 {
 		result = false
 	}
-	//submitInfo的checkValue的第十四位是否为1且ChemicalOxygenDemand为0
-	if c[13] == '1' && submitInfo.ChemicalOxygenDemand == 0 {
+	//submitInfo的checkValue的第十四位是否为1且COD为0
+	if c[13] == '1' && submitInfo.COD == 0 {
 		result = false
 	}
-	//submitInfo的checkValue的第十五位是否为1且BacteriaCount为0
-	if c[14] == '1' && submitInfo.BacteriaCount == 0 {
+	//submitInfo的checkValue的第十五位是否为1且BC为0
+	if c[14] == '1' && submitInfo.BC == 0 {
 		result = false
 	}
-	//submitInfo的checkValue的第十六位是否为1且StaphylococcusCount为0
-	if c[15] == '1' && submitInfo.StaphylococcusCount == 0 {
+	//submitInfo的checkValue的第十六位是否为1且SLC为0
+	if c[15] == '1' && submitInfo.SLC == 0 {
 		result = false
 	}
 	return result

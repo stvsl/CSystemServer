@@ -110,39 +110,36 @@ func (nodeinfo NodeInformation) GetAbsolute(id, locate, belong, typee string) (s
 	return string(jsonstr), nil
 }
 
-// 实现NodeInfo接口的Get方法
-// 根据id,地址信息，所属信息，类型聚合查找
-func (nodeinfo NodeInformation) Get(id, locate, belong, typee string) (string, error) {
+// 根据ID判断是否是最高管理员账户
+func (nodeinfo NodeInformation) IsHAdmin(id string) (bool, error) {
 	db, i, err := GetDB()
 	if err != nil {
-		return "", errors.New("数据库连接失败")
+		return false, errors.New("数据库连接失败")
+	}
+	defer Release(i)
+	// 查询结果
+	var result NodeInformation
+	// 查询指定ID的节点的TYPE值是否为3
+	db.Where("ID = ?", id).Find(&result)
+	if result.Type == 3 {
+		return true, nil
+	}
+	return false, nil
+}
+
+// 实现NodeInfo接口的Get方法
+// 根据id,地址信息，所属信息，类型聚合查找
+func (nodeinfo NodeInformation) Get(id string) (*[]NodeInformation, error) {
+	db, i, err := GetDB()
+	if err != nil {
+		return nil, errors.New("数据库连接失败")
 	}
 	defer Release(i)
 	// 结果数组
 	var result []NodeInformation
-	// 判断typee是否为空
-	if typee == "" {
-		// 查询所有节点信息
-		db.Where("Belong LIKE ?", "%"+id+"%").Where("Locate LIKE ?", "%"+locate+"%").Find(&result)
-	} else {
-		// 将string转换为int
-		typei, err := strconv.Atoi(typee)
-		if err != nil {
-			return "", err
-		}
-		// 模糊查询
-		if belong == "" {
-			//查询
-			db.Where("Belong LIKE ?", "%"+id+"%").Where("Locate LIKE ?", "%"+locate+"%").Where("TYPE = ?", typei).Find(&result)
-		}
-	}
-	// 序列化结果
-	jsonstr, err := json.Marshal(result)
-	if err != nil {
-		log.Panicln("json序列化失败：", err)
-		return "", errors.New("json序列化失败")
-	}
-	return string(jsonstr), nil
+	// 在node_informations表中查询BELONG的值为id的所有记录
+	db.Where("BELONG = ?", id).Pluck("LOCATE", &result)
+	return &result, nil
 }
 
 // 实现NodeInfo接口的ToJson方法
@@ -170,27 +167,21 @@ func (nodeinfo NodeInformation) GetToJson(id string) (string, error) {
 
 // 实现NodeInfo接口的ReadByLocate方法
 // 读取符合地理位置的节点信息并返回对应json格式信息
-func (nodeinfo NodeInformation) ReadByLocate(locate string) (string, error) {
+func (nodeinfo NodeInformation) GetByLocate(locate string) (*[]NodeInformation, error) {
 	db, i, err := GetDB()
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 	defer Release(i)
 	// 保存结果集合
 	var result []NodeInformation
-	// 查询
-	db.Where("LOCATE = ?", locate).Find(&result)
+	// 模糊查询
+	db.Where("LOCATE LIKE ?", "%"+locate+"%").Find(&result)
 	// 判断是否查询到
 	if len(result) == 0 {
-		return "", errors.New("查询不到该节点信息")
+		return nil, errors.New("查询不到该节点信息")
 	}
-	// 转换为json格式
-	json, err := json.Marshal(result)
-	if err != nil {
-		log.Panicln("转换json格式失败：", err)
-		return "", errors.New("转换json格式失败")
-	}
-	return string(json), nil
+	return &result, nil
 }
 
 // 实现NodeInfo接口的ReadByID方法
