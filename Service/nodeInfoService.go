@@ -1,12 +1,15 @@
 package Service
 
 import (
+	"encoding/base64"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"stvsljl.com/stvsl/AES"
 	"stvsljl.com/stvsl/Sql"
 	"stvsljl.com/stvsl/influxdb"
 )
@@ -20,7 +23,7 @@ func nodeInfoAbsoluteHandler(c *gin.Context) {
 	// 获取token中的id信息
 	id := c.GetString("id")
 	//查询数据库对象
-	n := Sql.NodeInformation{}
+	n := Sql.NodeInformations{}
 	// 查询数据库
 	str, err := n.GetAbsolute(id, Locate, Belong, Type)
 	if err != nil {
@@ -40,7 +43,7 @@ func nodeInfoAbsoluteHandler(c *gin.Context) {
 	})
 }
 
-//
+// node/info?EndTime=-0h&StartTime=-24h
 func nodeInfoSendHandler(c *gin.Context) {
 	// 获取token中的id信息
 	id := c.GetString("id")
@@ -48,16 +51,17 @@ func nodeInfoSendHandler(c *gin.Context) {
 	startTime := c.Query("StartTime")
 	endTime := c.Query("EndTime")
 	//查询数据库对象
-	n := Sql.NodeInformation{}
-	var nodelist *[]Sql.NodeInformation
+	a := Sql.AccountInformations{}
+	var nodelist []Sql.NodeInformations
 
 	// 查询账户知否是最高管理员														* 逻辑模式判断，最高管理员可以查看所有节点的数据，按照地理位置模糊查找，获取节点列表
-	isAdmin, err := n.IsHAdmin(id)
+	isAdmin, belong, aeskey, err := a.IsHAdmin(id)
 	if err != nil {
 		CX101(c)
 		return
 	}
-	if isAdmin {
+	n := Sql.NodeInformations{}
+	if isAdmin { //																	 * 结点基本信息查询
 		// 获取地理位置
 		Locate := c.Query("Locate")
 		// 查询数据库中Location为Locate的节点
@@ -68,7 +72,7 @@ func nodeInfoSendHandler(c *gin.Context) {
 		}
 	} else {
 		// 查询数据库
-		nodelist, err = n.Get(id)
+		nodelist, err = n.GetByBelong(belong)
 		if err != nil {
 			// 判断err内容是否是数据库连接失败
 			if strings.Contains(err.Error(), "数据库连接失败") {
@@ -82,12 +86,12 @@ func nodeInfoSendHandler(c *gin.Context) {
 
 	// 获取nodelist中的所有节点id
 	var ids []string
-	for _, v := range *nodelist {
+	for _, v := range nodelist {
 		ids = append(ids, v.ID)
 	}
 
 	// 查询时序数据库相关结点 														* 时序数据库联合查询，获取节点的时序数据
-	influxdata, err := influxdb.Query(ids, startTime, endTime)
+	influxdatalist, err := influxdb.Query(ids, startTime, endTime)
 	if err != nil {
 		CX301(c)
 		return
@@ -95,8 +99,15 @@ func nodeInfoSendHandler(c *gin.Context) {
 
 	// 获取nodelist中的所有节点的企业ID												* 企业信息联合查询，获取节点的企业信息
 	var orgs []string
-	for _, v := range *nodelist {
-		orgs = append(orgs, v.Belong)
+	for _, v := range nodelist {
+		orgs = append(orgs, v.BELONG)
+	}
+	// 查询企业数据库信息
+	comquery := Sql.Organization{}
+	comlist, err := comquery.GetByIDs(orgs)
+	if err != nil {
+		CX301(c)
+		return
 	}
 
 	// 融数据结构体																	* 融合数据结构体，将节点的时序数据和mariadb数据库信息融合
@@ -136,17 +147,71 @@ func nodeInfoSendHandler(c *gin.Context) {
 		COD                 float64 `json:"COD"`                 // 化学需氧量
 		BC                  int64   `json:"BC"`                  // 细菌总数
 		SLC                 int64   `json:"SLC"`                 // 大肠杆菌数
+		// 企业/机构信息
+		COMID      string `json:"comid"`     // 企业ID
+		COMNAME    string `json:"comname"`   // 企业名称
+		REMARK     string `json:"comremark"` // 企业备注
+		REGISTTIME string `json:"register"`  // 注册时间
+		COMTYPE    string `json:"comtype"`   // 企业类型
+		STANDARD   string `json:"standard"`  // 服从标准
 	}
-	// 查询企业数据库信息
 
-	var dataf []datapoints
+	var dataf []datapoints // 																* 数据融合
+	for i, v := range nodelist {
+		// 数据融合
+		dataf = append(dataf, datapoints{
+			IP:                  v.IP,
+			ID:                  v.ID,
+			Locate:              v.LOCATE,
+			Type:                v.TYPE,
+			Belong:              v.BELONG,
+			Principal:           v.PRINCIPAL,
+			Installer:           v.INSTALLER,
+			Maintainer:          v.MAINTAINER,
+			DataConfig:          v.DATACONFIG,
+			AESKey:              v.AESKEY,
+			SelfInfo:            v.SELFINFO,
+			LastUpload:          v.LASTUPLOAD,
+			SelfDate:            v.SELFDATE,
+			Remark:              v.REMARK,
+			InstallDate:         v.INSTALLDATE,
+			Lo:                  v.LO,
+			Li:                  v.LI,
+			GasConcentration:    influxdatalist[i].GasConcentration,
+			Temperature:         influxdatalist[i].Temperature,
+			PH:                  influxdatalist[i].PH,
+			Density:             influxdatalist[i].Density,
+			Conductivity:        influxdatalist[i].Conductivity,
+			OxygenConcentration: influxdatalist[i].OxygenConcentration,
+			MetalConcentration:  influxdatalist[i].MetalConcentration,
+			SC:                  influxdatalist[i].SC,
+			FSC:                 influxdatalist[i].FSC,
+			TN:                  influxdatalist[i].TN,
+			TP:                  influxdatalist[i].TP,
+			TOC:                 influxdatalist[i].TOC,
+			BOD:                 influxdatalist[i].BOD,
+			COD:                 influxdatalist[i].COD,
+			BC:                  influxdatalist[i].BC,
+			SLC:                 influxdatalist[i].SLC,
+			COMID:               comlist[i].ID,
+			COMNAME:             comlist[i].NAME,
+			REMARK:              comlist[i].REMARK,
+			REGISTTIME:          comlist[i].REGISTTIME,
+			COMTYPE:             comlist[i].TYPE,
+			STANDARD:            comlist[i].STANDARD,
+		})
+	}
 	// dataf 转换为json
 	json, _ := json.Marshal(&dataf)
-	// 返回查询结果
+	// AES加密
+	enstr, _ := AES.AesEncrypt(json, []byte(aeskey))
+	// base64
+	str64 := base64.StdEncoding.EncodeToString(enstr)
+	// 返回数据
 	c.JSON(http.StatusOK, gin.H{
-		"code":    "CX200",
-		"message": "success",
-		"data":    string(json),
+		"code": "CX200",
+		"msg":  "success",
+		"data": str64,
 	})
 }
 
@@ -168,7 +233,7 @@ func nodeDatainfoHandler(c *gin.Context) {
 	}
 	// 查询数据库
 	var ids []string
-	n2 := Sql.NodeInformation{}
+	n2 := Sql.NodeInformations{}
 	ids, err = n2.GetIDsByBelong(s)
 	if err != nil {
 		CX101(c)
@@ -188,6 +253,7 @@ func nodeDatainfoHandler(c *gin.Context) {
 		"message": "success",
 		"data":    str,
 	})
+	fmt.Println(str)
 }
 
 func nodePsubinfoHandler(c *gin.Context) {
@@ -208,7 +274,7 @@ func nodePsubinfoHandler(c *gin.Context) {
 	}
 	// 查询数据库
 	var ids []string
-	n2 := Sql.NodeInformation{}
+	n2 := Sql.NodeInformations{}
 	ids, err = n2.GetIDsByBelong(s)
 	if err != nil {
 		CX101(c)
@@ -269,7 +335,7 @@ func nodeConfigGetHandler(c *gin.Context) {
 	// 获取query参数
 	id := c.Query("nodeid")
 	// 查询数据库对象
-	n := Sql.NodeInformation{}
+	n := Sql.NodeInformations{}
 	// 查询数据库
 	node, err := n.GetByID(id)
 	if err != nil {
@@ -293,7 +359,7 @@ func nodeConfigGetHandler(c *gin.Context) {
 }
 
 func nodeConfigPostHandler(c *gin.Context) {
-	obj := Sql.NodeInformation{}
+	obj := Sql.NodeInformations{}
 	// 绑定json数据
 	err := c.BindJSON(&obj)
 	if err != nil {
@@ -314,7 +380,7 @@ func nodeConfigPostHandler(c *gin.Context) {
 }
 
 func nodeConfigDeleteHandler(c *gin.Context) {
-	obj := Sql.NodeInformation{}
+	obj := Sql.NodeInformations{}
 	err := obj.Delete(c.Query("nodeid"))
 	if err != nil {
 		CX401(c)
@@ -328,7 +394,7 @@ func nodeConfigDeleteHandler(c *gin.Context) {
 }
 
 func nodeConfigSetHandler(c *gin.Context) {
-	n := Sql.NodeInformation{}
+	n := Sql.NodeInformations{}
 	// 绑定json数据
 	err := c.BindJSON(&n)
 	if err != nil {

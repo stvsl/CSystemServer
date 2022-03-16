@@ -61,7 +61,7 @@ func Query(nodeid []string, startTime, endTime string) ([]SubmitInfo, error) {
 	for _, id := range nodeid {
 		// 查询每个节点的数据
 		query := `from(bucket: "stvsljc")
-			|> range(start: ` + startTime + `, stop: ` + endTime + `)) 
+			|> range(start: ` + startTime + `, stop: ` + endTime + `) 
 			|> filter(fn: (r) => r["_measurement"] == "data")
 			|> filter(fn: (r) => r["ID"] == "` + id + `")
 			|> last()
@@ -69,6 +69,7 @@ func Query(nodeid []string, startTime, endTime string) ([]SubmitInfo, error) {
 		//获取查询表结果
 		result, err := queryAPI.Query(context.Background(), query)
 		if err != nil {
+			fmt.Println("query error:", err)
 			return nil, err
 		}
 		for result.Next() {

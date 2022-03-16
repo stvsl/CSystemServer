@@ -65,6 +65,23 @@ func (o Organization) GetByID(id string) (*Organization, error) {
 	return &o, nil
 }
 
+func (o Organization) GetByIDs(id []string) ([]Organization, error) {
+	db, i, err := GetDB()
+	if err != nil {
+		return nil, err
+	}
+	defer Release(i)
+	// 逐个查询数据库
+	// 单个存储器
+	var result Organization
+	var results []Organization
+	for _, v := range id {
+		db.Where("id = ?", v).Find(&result)
+		results = append(results, result)
+	}
+	return results, nil
+}
+
 // 实现OrganizationInfo接口的GetByName方法
 // 根据企业名称获取企业信息
 func (o Organization) GetByName(name string) (*[]Organization, error) {

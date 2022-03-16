@@ -31,7 +31,7 @@ func nodeauthHandler(c *gin.Context) {
 		return
 	}
 	// 校验数据
-	n := Sql.NodeInformation{}
+	n := Sql.NodeInformations{}
 	str, err := n.GetFeatures(claims.ID)
 	if err != nil {
 		CX003(c)

@@ -13,8 +13,8 @@ type NodeInfo interface {
 	GetIP(string) (string, error)                               // 读取ID为id的某个节点的IP地址
 	GetRSAPublic(string) (string, error)                        // 根据ID获取节点的RSA公钥
 	GetRSAPrivate(string) (string, error)                       // 根据ID获取节点的RSA私钥
-	GetByID(string) (*NodeInformation, error)                   // 根据ID获取节点信息对象
-	GetByType(int) (*[]NodeInformation, error)                  // 根据类型获取节点信息对象
+	GetByID(string) (*NodeInformations, error)                  // 根据ID获取节点信息对象
+	GetByType(int) (*[]NodeInformations, error)                 // 根据类型获取节点信息对象
 	GetCheck(string) (string, error)                            // 根据ID获取节点的校验信息
 	GetFeatures(string) (string, error)                         // 根据ID获取节点的特征信息
 	GetIDsByBelong(string) ([]string, error)                    // 根据所属信息获取所有匹配的节点的ID

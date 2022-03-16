@@ -4,6 +4,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
+	"errors"
 )
 
 /******************************************************************************
@@ -66,6 +67,23 @@ func (accountInformations AccountInformations) GetByType(accountType int) (*[]Ac
 	var accounts []AccountInformations
 	db.Where("TYPE = ?", accountType).Find(&accounts)
 	return &accounts, nil
+}
+
+// 根据ID判断是否是最高管理员账户
+func (accountInformations AccountInformations) IsHAdmin(id string) (bool, string, string, error) {
+	db, i, err := GetDB()
+	if err != nil {
+		return false, "", "", errors.New("数据库连接失败")
+	}
+	defer Release(i)
+	// 查询结果
+	var result AccountInformations
+	// 查询指定ID的节点的TYPE值是否为3
+	db.Where("ID = ?", id).Find(&result)
+	if result.TYPE == 3 {
+		return true, result.ORGANIZATION, result.AES, nil
+	}
+	return false, result.ORGANIZATION, result.AES, nil
 }
 
 // 实现NodeInfo接口的Add方法

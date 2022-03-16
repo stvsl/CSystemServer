@@ -59,7 +59,7 @@ func (submitInfo SubmitInfo) EncodeJSON() (string, error) {
 
 //校验节点提交信息
 func (submitInfo SubmitInfo) Check() bool {
-	var s Sql.NodeInformation
+	var s Sql.NodeInformations
 	c, err := s.GetCheck(submitInfo.NodeId)
 	if err != nil {
 		return false
