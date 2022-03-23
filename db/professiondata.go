@@ -1,6 +1,9 @@
 package Sql
 
-import "time"
+import (
+	"errors"
+	"time"
+)
 
 // Professiondata 专业机构检测结果
 type Professiondata struct {
@@ -92,6 +95,32 @@ func (professiondata Professiondata) Delete() error {
 	}
 	defer Release(i)
 	return db.Delete(&professiondata).Error
+}
+
+func (professiondata Professiondata) GetByID(id string) (Professiondata, error) {
+	db, i, err := GetDB()
+	if err != nil {
+		return professiondata, err
+	}
+	defer Release(i)
+	// 查询最新的一条记录
+	err = db.Where("id = ?", id).Last(&professiondata).Error
+	return professiondata, err
+}
+
+func (professiondata Professiondata) GetByIDs(ids []string) (*[]Professiondata, error) {
+	db, i, err := GetDB()
+	if err != nil {
+		return nil, err
+	}
+	if len(ids) == 0 {
+		return nil, errors.New("ids is empty")
+	}
+	defer Release(i)
+	var professiondatas []Professiondata
+	// 获取最新的一条记录
+	err = db.Where("id in (?)", ids).Last(&professiondatas).Error
+	return &professiondatas, err
 }
 
 // 查询从XX年XX月XX日到XX年XX月XX日id为XXX的多个节点的记录并返回长度

@@ -45,6 +45,7 @@ func test(id string) {
 	// 	return
 	// }
 	// fmt.Println(string(destr))
+
 	sub := influxdb.SubmitInfo{}
 	// 使用时间作为随机数种子
 	rand.Seed(time.Now().UnixNano())
@@ -80,7 +81,7 @@ func testread() {
 	stlist = append(stlist, "CX0000001")
 	stlist = append(stlist, "CX0000002")
 	// 查询一天
-	str, err := influxdb.Query(stlist, time.Now().AddDate(0, 0, -1).String(), time.Now().String())
+	str, err := influxdb.Query(stlist, "-24h", "-0h")
 	if err != nil {
 		fmt.Println(err)
 		return

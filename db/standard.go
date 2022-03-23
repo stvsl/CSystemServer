@@ -124,3 +124,25 @@ func (s *Standard) Get() (string, error) {
 	}
 	return string(jsonStr), nil
 }
+
+func (s *Standard) GetByID(id string) (string, error) {
+	db, i, err := GetDB()
+	if err != nil {
+		return "", err
+	}
+	defer Release(i)
+	// 存储查询集合
+	var standard Standard
+	// 获取数据库全部数据
+	if err := db.Where("id = ?", id).Find(&standard).Error; err != nil {
+		log.Panicln("获取数据库失败：", err)
+		return "", errors.New("获取数据库失败")
+	}
+	// 将查询集合转换为json格式
+	jsonStr, err := json.Marshal(standard)
+	if err != nil {
+		log.Panicln("转换json格式失败：", err)
+		return "", errors.New("转换json格式失败")
+	}
+	return string(jsonStr), nil
+}

@@ -18,32 +18,37 @@ func Start() {
 	router := gin.Default()
 	router.SetTrustedProxies(nil)
 	router.LoadHTMLGlob("./web/pages/*")
-	router.GET("/ping", pingHandler)                                             //连接测试,同时返回服务器RSA密钥信息
-	router.POST("/ping", pingpostHandler)                                        //二次连接，连理双向通信
-	router.GET("/pages/default/map", mapPageHandler)                             //对外提供地图页面
-	router.POST("/submit/nodesubmit", NodeAuthMiddleware(), submitInfoHandler)   //节点数据上传到时序数据库
-	router.POST("/auth/nodeauth", nodeauthHandler)                               //节点获取token
-	router.POST("/auth/getauth", authHandler)                                    //客户端获取token
-	router.GET("/passwd/getpass", AuthMiddleware(), getPassHandler)              //获取用户密码残片
-	router.POST("/passwd/getpass", AuthMiddleware(), setPassHandler)             //设置用户密码残片
-	router.GET("/node/info", AuthMiddleware(), nodeInfoSendHandler)              //获取相关节点信息(联合时序数据库混合搜索)
-	router.GET("/node/info/absolute", AuthMiddleware(), nodeInfoAbsoluteHandler) //获取相关节点信息(仅数据库搜索)
-	router.GET("/node/datainfo", AuthMiddleware(), nodeDatainfoHandler)          //获取相关节点的传感器数据
-	router.GET("/node/psubinfo", AuthMiddleware(), nodePsubinfoHandler)          //获取相关节点的专业机构检测数据数据
-	router.POST("/node/psubinfo", AuthMiddleware(), nodePsubPostHandler)         //上传节点的专业机构检测数据数据
-	router.GET("/node/main", AuthMiddleware(), nodeConfigGetHandler)             //获取节点配置信息
-	router.POST("/node/main", AuthMiddleware(), nodeConfigPostHandler)           //获取节点配置信息
-	router.DELETE("/node/main", AuthMiddleware(), nodeConfigDeleteHandler)       //删除节点配置信息
-	router.POST("/node/set", AuthMiddleware(), nodeConfigSetHandler)             //更新节点配置信息
-	router.GET("/my/account", AuthMiddleware(), myAccountGetHandler)             //获取个人账户信息
-	router.POST("/my/account", AuthMiddleware(), myAccountPostHandler)           //更新个人账户信息
-	router.DELETE("/my/account", AuthMiddleware(), myAccountDeleteHandler)       //冻结个人账户
-	router.GET("/account", AuthMiddleware(), accountGetHandler)                  //获取账户信息
-	router.POST("/account", AuthMiddleware(), accountPostHandler)                //更新账户信息
-	router.DELETE("/account", AuthMiddleware(), accountDeleteHandler)            //删除账户
-	router.POST("/account/new", AuthMiddleware(), accountNewHandler)             //创建新账户
-	router.GET("/update", updateHandler)                                         //更新检测
-	router.GET("/update/download", updateDownloadHandler)                        //更新下载
+	router.GET("/ping", pingHandler)                                              //连接测试,同时返回服务器RSA密钥信息
+	router.POST("/ping", pingpostHandler)                                         //二次连接，连理双向通信
+	router.GET("/pages/default/map", mapPageHandler)                              //对外提供地图页面
+	router.GET("/favicon.ico", faviconHandler)                                    //对外提供favicon.ico
+	router.GET("/redpoint", redpointHandler)                                      //对外提供红色坐标点
+	router.GET("/greenpoint", greenpointHandler)                                  //对外提供绿色坐标点
+	router.GET("/bluepoint", bluepointHandler)                                    //对外提供蓝色坐标点
+	router.POST("/submit/nodesubmit", NodeAuthMiddleware(), submitInfoHandler)    //节点数据上传到时序数据库
+	router.POST("/auth/nodeauth", nodeauthHandler)                                //节点获取token
+	router.POST("/auth/getauth", authHandler)                                     //客户端获取token
+	router.GET("/passwd/getpass", AuthMiddleware(), getPassHandler)               //获取用户密码残片
+	router.POST("/passwd/getpass", AuthMiddleware(), setPassHandler)              //设置用户密码残片
+	router.GET("/node/info", AuthMiddleware(), nodeInfoSendHandler)               //获取相关节点信息(联合时序数据库混合搜索)
+	router.GET("/node/professional", AuthMiddleware(), nodeInfoProfessionHandler) //获取相关专业检测信息
+	router.GET("/node/datainfo", AuthMiddleware(), nodeDatainfoHandler)           //获取相关节点的传感器数据
+	router.GET("/node/psubinfo", AuthMiddleware(), nodePsubinfoHandler)           //获取相关节点的专业机构检测数据数据
+	router.POST("/node/psubinfo", AuthMiddleware(), nodePsubPostHandler)          //上传节点的专业机构检测数据数据
+	router.GET("/standard", AuthMiddleware(), StandardGetHandler)                 // 获取执行标准数据
+	router.GET("/node/main", AuthMiddleware(), nodeConfigGetHandler)              //获取节点配置信息
+	router.POST("/node/main", AuthMiddleware(), nodeConfigPostHandler)            //获取节点配置信息
+	router.DELETE("/node/main", AuthMiddleware(), nodeConfigDeleteHandler)        //删除节点配置信息
+	router.POST("/node/set", AuthMiddleware(), nodeConfigSetHandler)              //更新节点配置信息
+	router.GET("/my/account", AuthMiddleware(), myAccountGetHandler)              //获取个人账户信息
+	router.POST("/my/account", AuthMiddleware(), myAccountPostHandler)            //更新个人账户信息
+	router.DELETE("/my/account", AuthMiddleware(), myAccountDeleteHandler)        //冻结个人账户
+	router.GET("/account", AuthMiddleware(), accountGetHandler)                   //获取账户信息
+	router.POST("/account", AuthMiddleware(), accountPostHandler)                 //更新账户信息
+	router.DELETE("/account", AuthMiddleware(), accountDeleteHandler)             //删除账户
+	router.POST("/account/new", AuthMiddleware(), accountNewHandler)              //创建新账户
+	router.GET("/update", updateHandler)                                          //更新检测
+	router.GET("/update/download", updateDownloadHandler)                         //更新下载
 	// 启动SSL
 	go router.RunTLS(":10214", "rsa/stvsljl.com.crt", "rsa/stvsljl.com.key")
 	go router.Run(":10241")

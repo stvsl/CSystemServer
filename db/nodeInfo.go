@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"log"
-	"strconv"
 	"time"
 )
 
@@ -73,41 +72,6 @@ func (nodeinfo NodeInformations) Delete(id string) error {
 	defer Release(i)
 	db.Where("ID = ?", id).Delete(nodeinfo)
 	return nil
-}
-
-// 实现NodeInfo接口的Get方法
-// 根据id,地址信息，所属信息，类型聚合查找
-func (nodeinfo NodeInformations) GetAbsolute(id, locate, belong, typee string) (string, error) {
-	db, i, err := GetDB()
-	if err != nil {
-		return "", errors.New("数据库连接失败")
-	}
-	defer Release(i)
-	// 结果数组
-	var result []NodeInformations
-	// 判断typee是否为空
-	if typee == "" {
-		// 查询所有节点信息
-		db.Where("BELONG = ? AND LOCATE = ?", belong, locate).Find(&result)
-	} else {
-		// 将string转换为int
-		typei, err := strconv.Atoi(typee)
-		if err != nil {
-			return "", err
-		}
-		// 严格查询
-		if belong == "" {
-			//查询
-			db.Where("BELONG = ? AND LOCATE = ? AND TYPE = ?", belong, locate, typei).Find(&result)
-		}
-	}
-	// 序列化结果
-	jsonstr, err := json.Marshal(result)
-	if err != nil {
-		log.Panicln("json序列化失败：", err)
-		return "", errors.New("json序列化失败")
-	}
-	return string(jsonstr), nil
 }
 
 // 实现NodeInfo接口的Get方法

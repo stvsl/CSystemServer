@@ -3,7 +3,6 @@ package Service
 import (
 	"encoding/base64"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strings"
 	"time"
@@ -14,27 +13,36 @@ import (
 	"stvsljl.com/stvsl/influxdb"
 )
 
-// stvsljl.com/stvsl/node/info?Locate=北京&Belong&Type=0
-func nodeInfoAbsoluteHandler(c *gin.Context) {
-	// 获取query参数
-	Locate := c.Query("Locate")
-	Belong := c.Query("Belong")
-	Type := c.Query("Type")
+func nodeInfoProfessionHandler(c *gin.Context) {
 	// 获取token中的id信息
 	id := c.GetString("id")
+	aes := c.GetString("aes")
+	a := Sql.AccountInformations{}
+	// 获取其机构代码
+	s, err := a.GetOrganization(id)
 	//查询数据库对象
 	n := Sql.NodeInformations{}
+	// 获取节点列表
+	nodeinfolist, err := n.GetByBelong(s)
+	// 只获取账户的ID
+	var ids []string
+	for _, v := range nodeinfolist {
+		ids = append(ids, v.ID)
+	}
 	// 查询数据库
-	str, err := n.GetAbsolute(id, Locate, Belong, Type)
+	p := Sql.Professiondata{}
+	data, err := p.GetByIDs(ids)
 	if err != nil {
-		// 判断err内容是否是数据库连接失败
-		if strings.Contains(err.Error(), "数据库连接失败") {
-			CX101(c)
-			return
-		}
 		CX301(c)
 		return
 	}
+	// 转换为json
+	json, _ := json.Marshal(data)
+
+	// AES加密
+	aesjson, _ := AES.AesEncrypt(json, []byte(aes))
+	// base64编码
+	str := base64.StdEncoding.EncodeToString(aesjson)
 	// 返回查询结果
 	c.JSON(http.StatusOK, gin.H{
 		"code":    "CX200",
@@ -53,7 +61,6 @@ func nodeInfoSendHandler(c *gin.Context) {
 	//查询数据库对象
 	a := Sql.AccountInformations{}
 	var nodelist []Sql.NodeInformations
-
 	// 查询账户知否是最高管理员														* 逻辑模式判断，最高管理员可以查看所有节点的数据，按照地理位置模糊查找，获取节点列表
 	isAdmin, belong, aeskey, err := a.IsHAdmin(id)
 	if err != nil {
@@ -253,7 +260,6 @@ func nodeDatainfoHandler(c *gin.Context) {
 		"message": "success",
 		"data":    str,
 	})
-	fmt.Println(str)
 }
 
 func nodePsubinfoHandler(c *gin.Context) {
@@ -411,5 +417,33 @@ func nodeConfigSetHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"code":    "CX200",
 		"message": "success",
+	})
+}
+
+// StandardGetHandler
+func StandardGetHandler(c *gin.Context) {
+	// 获取query参数
+	id := c.Query("id")
+	// 查询数据库对象
+	n := Sql.Standard{}
+	// 查询数据库
+	standard, err := n.Get(id)
+	if err != nil {
+		// 判断err内容是否是数据库连接失败
+		if strings.Contains(err.Error(), "数据库连接失败") {
+			CX101(c)
+			return
+		}
+
+		CX301(c)
+		return
+	}
+	// standard转换为json
+	str, _ := json.Marshal(standard)
+	// 返回查询结果
+	c.JSON(http.StatusOK, gin.H{
+		"code":    "CX200",
+		"message": "success",
+		"data":    str,
 	})
 }
