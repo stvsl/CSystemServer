@@ -1,7 +1,6 @@
 package Sql
 
 import (
-	"encoding/json"
 	"errors"
 	"log"
 	"time"
@@ -89,29 +88,6 @@ func (nodeinfo NodeInformations) GetByBelong(belong string) ([]NodeInformations,
 	return result, nil
 }
 
-// 实现NodeInfo接口的ToJson方法
-// 根据id查询节点
-func (nodeinfo NodeInformations) GetToJson(id string) (string, error) {
-	db, i, err := GetDB()
-	if err != nil {
-		return "", err
-	}
-	defer Release(i)
-	// 查询
-	db.Where("ID = ?", id).First(&nodeinfo)
-	// 判断是否查询到
-	if nodeinfo.ID == "" {
-		return "", errors.New("查询不到该节点信息")
-	}
-	// 转换为json格式
-	json, err := json.Marshal(nodeinfo)
-	if err != nil {
-		log.Panicln("转换json格式失败：", err)
-		return "", errors.New("转换json格式失败")
-	}
-	return string(json), nil
-}
-
 // 实现NodeInfo接口的ReadByLocate方法
 // 读取符合地理位置的节点信息并返回对应json格式信息
 func (nodeinfo NodeInformations) GetByLocate(locate string) ([]NodeInformations, error) {
@@ -129,29 +105,6 @@ func (nodeinfo NodeInformations) GetByLocate(locate string) ([]NodeInformations,
 		return nil, errors.New("查询不到该节点信息")
 	}
 	return result, nil
-}
-
-// 实现NodeInfo接口的ReadByID方法
-// 读取符合ID的节点信息并返回对应json格式信息
-func (nodeinfo NodeInformations) ReadByID(id string) (string, error) {
-	db, i, err := GetDB()
-	if err != nil {
-		return "", err
-	}
-	defer Release(i)
-	// 保存结果到nodeinfo
-	db.Where("ID = ?", id).First(&nodeinfo)
-	// 判断是否查询到
-	if nodeinfo.ID == "" {
-		return "", errors.New("查询不到该节点信息")
-	}
-	// 转换为json格式
-	json, err := json.Marshal(nodeinfo)
-	if err != nil {
-		log.Panicln("转换json格式失败：", err)
-		return "", errors.New("转换json格式失败")
-	}
-	return string(json), nil
 }
 
 // 实现NodeInfo接口的GetIP方法

@@ -222,38 +222,40 @@ func nodeInfoSendHandler(c *gin.Context) {
 	})
 }
 
-func nodeDatainfoHandler(c *gin.Context) {
-	// 获取token中的id信息
+func allnodeDatainfoHandler(c *gin.Context) {
+	// 从token获取id
+	aes := c.GetString("aes")
 	id := c.GetString("id")
 	// 从query中获取开始时间和结束时间
 	startTime := c.Query("StartTime")
 	endTime := c.Query("EndTime")
-	// 转换为influxdb时间
-	// 在account中查询其下的所有节点id
-	// 查询数据库对象
-	n := Sql.AccountInformations{}
-	// 查询其机构代码
-	s, err := n.GetOrganization(id)
-	if err != nil {
-		CX101(c)
-		return
-	}
 	// 查询数据库
+	// 获取token中的id信息
+	a := Sql.AccountInformations{}
+	// 获取其机构代码
+	s, err := a.GetOrganization(id)
+	//查询数据库对象
+	n := Sql.NodeInformations{}
+	// 获取节点列表
+	nodeinfolist, err := n.GetByBelong(s)
+	// 只获取账户的ID
 	var ids []string
-	n2 := Sql.NodeInformations{}
-	ids, err = n2.GetIDsByBelong(s)
-	if err != nil {
-		CX101(c)
-		return
+	for _, v := range nodeinfolist {
+		ids = append(ids, v.ID)
 	}
 	// 查询时序数据库
-	str, err := influxdb.Query(ids, startTime, endTime)
+	data, err := influxdb.QueryAll(ids, startTime, endTime)
 	if err != nil {
-		CX301(c)
+		CX411(c)
 		return
 	}
-	// 查询关系数据库
+	// 转换为json
+	json, _ := json.Marshal(data)
 
+	// AES加密
+	aesjson, _ := AES.AesEncrypt(json, []byte(aes))
+	// base64编码
+	str := base64.StdEncoding.EncodeToString(aesjson)
 	// 返回查询结果
 	c.JSON(http.StatusOK, gin.H{
 		"code":    "CX200",
@@ -262,44 +264,51 @@ func nodeDatainfoHandler(c *gin.Context) {
 	})
 }
 
-func nodePsubinfoHandler(c *gin.Context) {
+func allnodePsubinfoHandler(c *gin.Context) {
 	// 从token获取id
+	aes := c.GetString("aes")
 	id := c.GetString("id")
 	// 从query中获取开始时间和结束时间
 	startTime := c.Query("StartTime")
 	endTime := c.Query("EndTime")
+	// 时间转换为time.Time
+	start, _ := time.Parse("2006-01-02 15:04:05", startTime)
+	end, err := time.Parse("2006-01-02 15:04:05", endTime)
+	if err != nil {
+		CX301(c)
+	}
+	// 查询数据库
+	// 获取token中的id信息
+	a := Sql.AccountInformations{}
+	// 获取其机构代码
+	s, err := a.GetOrganization(id)
+	//查询数据库对象
+	n := Sql.NodeInformations{}
+	// 获取节点列表
+	nodeinfolist, err := n.GetByBelong(s)
+	// 只获取账户的ID
+	var ids []string
+	for _, v := range nodeinfolist {
+		ids = append(ids, v.ID)
+	}
 	// 查询数据库
 	p := Sql.Professiondata{}
-	// 查询数据库对象
-	n := Sql.AccountInformations{}
-	// 查询其机构代码
-	s, err := n.GetOrganization(id)
+	data, err := p.GetAllByIDs(ids, start, end)
 	if err != nil {
-		CX101(c)
-		return
-	}
-	// 查询数据库
-	var ids []string
-	n2 := Sql.NodeInformations{}
-	ids, err = n2.GetIDsByBelong(s)
-	if err != nil {
-		CX101(c)
-		return
-	}
-	// 查询数据库
-	data, x, err := p.GetByTime(ids, startTime, endTime)
-	if err != nil {
-		CX302(c)
+		CX401(c)
 		return
 	}
 	// 转换为json
-	str, _ := json.Marshal(data)
+	json, _ := json.Marshal(data)
+	// AES加密
+	aesjson, _ := AES.AesEncrypt(json, []byte(aes))
+	// base64编码
+	str := base64.StdEncoding.EncodeToString(aesjson)
 	// 返回查询结果
 	c.JSON(http.StatusOK, gin.H{
 		"code":    "CX200",
 		"message": "success",
-		"data":    string(str),
-		"count":   x,
+		"data":    str,
 	})
 }
 
@@ -422,28 +431,28 @@ func nodeConfigSetHandler(c *gin.Context) {
 
 // StandardGetHandler
 func StandardGetHandler(c *gin.Context) {
-	// 获取query参数
-	id := c.Query("id")
-	// 查询数据库对象
-	n := Sql.Standard{}
-	// 查询数据库
-	standard, err := n.Get(id)
-	if err != nil {
-		// 判断err内容是否是数据库连接失败
-		if strings.Contains(err.Error(), "数据库连接失败") {
-			CX101(c)
-			return
-		}
+	// // 获取query参数
+	// id := c.Query("id")
+	// // 查询数据库对象
+	// n := Sql.Standard{}
+	// // 查询数据库
+	// standard, err := n.Get(id)
+	// if err != nil {
+	// 	// 判断err内容是否是数据库连接失败
+	// 	if strings.Contains(err.Error(), "数据库连接失败") {
+	// 		CX101(c)
+	// 		return
+	// 	}
 
-		CX301(c)
-		return
-	}
-	// standard转换为json
-	str, _ := json.Marshal(standard)
+	// 	CX301(c)
+	// 	return
+	// }
+	// // standard转换为json
+	// str, _ := json.Marshal(standard)
 	// 返回查询结果
 	c.JSON(http.StatusOK, gin.H{
 		"code":    "CX200",
 		"message": "success",
-		"data":    str,
+		// "data":    str,
 	})
 }

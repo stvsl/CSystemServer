@@ -91,8 +91,6 @@
             width: 110px;
         }
 
-        .table-ui tbody tr:nth-child(odd) {}
-
         .table-ui tbody tr:nth-child(even) {
             background: #f5f5f5;
         }
@@ -173,22 +171,23 @@
         // 添加3D控件
         var navi3DCtrl = new BMapGL.NavigationControl3D();
         map.addControl(navi3DCtrl);
-
+        var trans;
         //qt通信组件实例化
         new QWebChannel(qt.webChannelTransport, function (channel) {
             /*函数绑定*/
+            trans = channel.objects.trans;
             //地图poi文字显示设置
-            channel.objects.trans.setPoiText.connect(setPoiText);
+            trans.setPoiText.connect(setPoiText);
             //地图poi图标显示设置
-            channel.objects.trans.setPoiIcon.connect(setPoiIcon);
+            trans.setPoiIcon.connect(setPoiIcon);
             //地理位置查找
-            channel.objects.trans.searchP.connect(searchP);
+            trans.searchP.connect(searchP);
             //地图地球模式
-            channel.objects.trans.setMapType.connect(setMapType);
+            trans.setMapType.connect(setMapType);
             //跳转到指定位置
-            channel.objects.trans.setCenter.connect(setCenter);
+            trans.setCenter.connect(setCenter);
             //添加节点
-            channel.objects.trans.addPoint.connect(addPoint);
+            trans.addPoint.connect(addPoint);
         })
 
         //设置中央位置

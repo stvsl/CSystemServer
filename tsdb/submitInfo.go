@@ -45,6 +45,46 @@ type SubmitInfo struct {
 	SLC int64 `json:"SLC"`
 }
 
+//节点提交信息定义
+type SubmitInfoWithTime struct {
+	// 节点ID
+	NodeId string `json:"id"`
+	// 时间
+	Time string `json:"Time"`
+	// 气体浓度
+	GasConcentration float64 `json:"GasConcentration"`
+	// 温度
+	Temperature float64 `json:"Temperature"`
+	// PH
+	PH float64 `json:"PH"`
+	// 浊度
+	Density float64 `json:"Density"`
+	// 电导率
+	Conductivity float64 `json:"Conductivity"`
+	// 含氧量
+	OxygenConcentration float64 `json:"OxygenConcentration"`
+	// 重金属
+	MetalConcentration float64 `json:"MetalConcentration"`
+	// 溶解性固体
+	SC float64 `json:"SC"`
+	// 悬浮性固体
+	FSC float64 `json:"FSC"`
+	// 总氮
+	TN float64 `json:"TN"`
+	// 总磷
+	TP float64 `json:"TP"`
+	// 总有机碳
+	TOC float64 `json:"TOC"`
+	// 生物需氧量
+	BOD float64 `json:"BOD"`
+	// 化学需氧量
+	COD float64 `json:"COD"`
+	// 细菌总数
+	BC int64 `json:"BC"`
+	// 大肠杆菌数
+	SLC int64 `json:"SLC"`
+}
+
 //解析json，使用json数据实例化SubmitInfo
 func (submitInfo SubmitInfo) DecodeJSON(jsonstr string) error {
 	err := json.Unmarshal([]byte(jsonstr), &submitInfo)

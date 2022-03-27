@@ -3,7 +3,6 @@ package influxdb
 import (
 	"context"
 	"fmt"
-	"log"
 	"strconv"
 	"time"
 
@@ -48,7 +47,7 @@ func Write(submit *SubmitInfo) error {
 	return nil
 }
 
-// 查询从XXXX到XXXX期间内多个节点的数据	 时间格式：2021-05-28T23:30:00Z
+// 查询从XXXX到XXXX期间内多个节点的数据(只获取最新数据)	 时间格式：2021-05-28T23:30:00Z
 func Query(nodeid []string, startTime, endTime string) ([]SubmitInfo, error) {
 	// 创建客户端
 	client := influxdb2.NewClient("http://127.0.0.1:8086", "3TRkGcboToJkMfoPUwvuVvC0Rn1Tstzq5beZAjyv-MscinJA43c0ZIdW70eapXCB5MRTlwQ92VkDMs-Qs6yfDw==")
@@ -102,29 +101,61 @@ func Query(nodeid []string, startTime, endTime string) ([]SubmitInfo, error) {
 	return suminfos, nil
 }
 
-func Query2() error {
-	//创建客户端
+func QueryAll(nodeid []string, startTime, endTime string) ([]SubmitInfoWithTime, error) {
+	// 创建客户端
 	client := influxdb2.NewClient("http://127.0.0.1:8086", "3TRkGcboToJkMfoPUwvuVvC0Rn1Tstzq5beZAjyv-MscinJA43c0ZIdW70eapXCB5MRTlwQ92VkDMs-Qs6yfDw==")
-	// Get query client
+	//获取非阻塞写入客户端
 	queryAPI := client.QueryAPI("stvsl-jc")
+	defer client.Close()
+	// 存储结果
+	var suminfos []SubmitInfoWithTime
+	// 查询每个节点的数据
+	query := `from(bucket: "stvsljc")
+			|> range(start: ` + startTime + `, stop: ` + endTime + `) 
+			|> filter(fn: (r) => r["_measurement"] == "data")
+			|> filter(fn: (r) => r["ID"] == "` + nodeid[0]
 
-	query := `from(bucket:"stvsljc")
-				|> range(start: -1h) 
-				|> filter(fn: (r) => r._measurement == "data")`
-
+	for _, id := range nodeid[1:] {
+		query += `" or r["ID"] == "` + id
+	}
+	query += `")`
+	query += `|> pivot(rowKey: ["_time"], columnKey: ["_field"], valueColumn: "_value")
+			  |> yield(name: "mean")`
 	//获取查询表结果
 	result, err := queryAPI.Query(context.Background(), query)
 	if err != nil {
-		log.Panicln("query error:", err)
-		return err
+		fmt.Println("query error:", err)
+		return nil, err
 	}
-	//检查是否有错误
-	if result.Err() != nil {
-		fmt.Printf("query parsing error: \n" + result.Err().Error())
+	// 打印
+	for result.Next() {
+		record := result.Record()
+		// 转换为结构体实例
+		BC, _ := strconv.ParseInt(fmt.Sprint(record.ValueByKey("BC")), 10, 64)
+		SLC, _ := strconv.ParseInt(fmt.Sprint(record.ValueByKey("SLC")), 10, 64)
+		submitInfo := &SubmitInfoWithTime{
+			NodeId:              record.ValueByKey("ID").(string),
+			GasConcentration:    record.ValueByKey("GasConcentration").(float64),
+			Temperature:         record.ValueByKey("Temperature").(float64),
+			PH:                  record.ValueByKey("PH").(float64),
+			Density:             record.ValueByKey("Density").(float64),
+			Conductivity:        record.ValueByKey("Conductivity").(float64),
+			OxygenConcentration: record.ValueByKey("OxygenConcentration").(float64),
+			MetalConcentration:  record.ValueByKey("MetalConcentration").(float64),
+			SC:                  record.ValueByKey("SC").(float64),
+			FSC:                 record.ValueByKey("FSC").(float64),
+			TN:                  record.ValueByKey("TN").(float64),
+			TP:                  record.ValueByKey("TP").(float64),
+			TOC:                 record.ValueByKey("TOC").(float64),
+			BOD:                 record.ValueByKey("BOD").(float64),
+			COD:                 record.ValueByKey("COD").(float64),
+			BC:                  BC,
+			SLC:                 SLC,
+			Time:                fmt.Sprintf("%v", record.ValueByKey("_time")),
+		}
+		suminfos = append(suminfos, *submitInfo)
 	}
-	//总是在最后关闭客户端
-	defer client.Close()
-	return nil
+	return suminfos, nil
 }
 
 // 连接测试请求

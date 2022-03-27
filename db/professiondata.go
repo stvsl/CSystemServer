@@ -118,8 +118,22 @@ func (professiondata Professiondata) GetByIDs(ids []string) (*[]Professiondata, 
 	}
 	defer Release(i)
 	var professiondatas []Professiondata
-	// 获取最新的一条记录
-	err = db.Where("id in (?)", ids).Last(&professiondatas).Error
+	err = db.Where("id in (?)", ids).Find(&professiondatas).Error
+	return &professiondatas, err
+}
+
+func (professiondata Professiondata) GetAllByIDs(ids []string, startTime time.Time, endTime time.Time) (*[]Professiondata, error) {
+	db, i, err := GetDB()
+	if err != nil {
+		return nil, err
+	}
+	if len(ids) == 0 {
+		return nil, errors.New("ids is empty")
+	}
+	defer Release(i)
+	var professiondatas []Professiondata
+	// 查询全部符合的记录
+	err = db.Where("id in (?) and TIME >= ? and TIME <= ?", ids, startTime, endTime).Find(&professiondatas).Error
 	return &professiondatas, err
 }
 
