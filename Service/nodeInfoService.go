@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 
@@ -271,9 +272,12 @@ func allnodePsubinfoHandler(c *gin.Context) {
 	// 从query中获取开始时间和结束时间
 	startTime := c.Query("StartTime")
 	endTime := c.Query("EndTime")
-	// 时间转换为time.Time
-	start, _ := time.Parse("2006-01-02 15:04:05", startTime)
-	end, err := time.Parse("2006-01-02 15:04:05", endTime)
+	// 转换为整形
+	start, err := strconv.Atoi(startTime)
+	end, err := strconv.Atoi(endTime)
+	// 时间戳转换为时间
+	startT := time.Unix(int64(start), 0)
+	endT := time.Unix(int64(end), 0)
 	if err != nil {
 		CX301(c)
 	}
@@ -293,7 +297,7 @@ func allnodePsubinfoHandler(c *gin.Context) {
 	}
 	// 查询数据库
 	p := Sql.Professiondata{}
-	data, err := p.GetAllByIDs(ids, start, end)
+	data, err := p.GetAllByIDs(ids, startT, endT)
 	if err != nil {
 		CX401(c)
 		return

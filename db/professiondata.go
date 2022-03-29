@@ -122,7 +122,7 @@ func (professiondata Professiondata) GetByIDs(ids []string) (*[]Professiondata, 
 	return &professiondatas, err
 }
 
-func (professiondata Professiondata) GetAllByIDs(ids []string, startTime time.Time, endTime time.Time) (*[]Professiondata, error) {
+func (professiondata Professiondata) GetAllByIDs(ids []string, startTime time.Time, endTime time.Time) ([]Professiondata, error) {
 	db, i, err := GetDB()
 	if err != nil {
 		return nil, err
@@ -134,7 +134,7 @@ func (professiondata Professiondata) GetAllByIDs(ids []string, startTime time.Ti
 	var professiondatas []Professiondata
 	// 查询全部符合的记录
 	err = db.Where("id in (?) and TIME >= ? and TIME <= ?", ids, startTime, endTime).Find(&professiondatas).Error
-	return &professiondatas, err
+	return professiondatas, err
 }
 
 // 查询从XX年XX月XX日到XX年XX月XX日id为XXX的多个节点的记录并返回长度
