@@ -153,6 +153,7 @@
 </head>
 
 <body>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.3.2/dist/echarts.js"></script>
     <div id="container"></div>
     <script type="text/javascript">
         // 创建地图实例 
@@ -246,9 +247,64 @@
                 var infoWindow = new BMapGL.InfoWindow(info);
                 infoWindow.setTitle("节点信息");
                 this.openInfoWindow(infoWindow);
+                setTimeout(fun, 500);
             });
         }
 
+        function fun() {
+            var myChart1 = echarts.init(document.getElementById('chartview'));
+            const colors = ["#67befb", "#83e498", "#ffd680", "#ffa48c", "#8be3dd", "#a2a5c0", "#81a5ee"];
+            option = {
+                grid: {
+                    top: '2%',
+                    left: '15%',
+                    right: '40%',
+                    bottom: '2%',
+                },
+                yAxis: {
+                    data: ['气体浓度', '温度', 'PH', '电导率', '含氧量', '重金属', '生物需氧量'],
+                    splitLine: {
+                        show: false
+                    },
+                    axisTick: {
+                        show: false
+                    },
+                },
+                xAxis: {},
+                series: [
+                    {
+                        type: 'bar',
+                        data: [23, 24, 18, 25, 27, 28, 25],
+                        itemStyle: {
+                            normal: {
+                                color: function (params) {
+                                    return colors[params.dataIndex];
+                                }
+                            }
+                        },
+                        label: {
+                            show: true,
+                            position: 'right',
+                        },
+                    },
+                    {
+                        name: '成分组成',
+                        type: 'pie',
+                        radius: [0, '40%'],
+                        center: ['80%', '50%'],
+                        data: [
+                            { value: 10, name: '重金属' },
+                            { value: 5, name: '固体' },
+                            { value: 15, name: '细菌' },
+                            { value: 25, name: '化合物' }
+                        ]
+
+                    },
+
+                ]
+            };
+            myChart1.setOption(option);
+        }
     </script>
 </body>
 

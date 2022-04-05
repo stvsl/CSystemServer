@@ -3,6 +3,7 @@ package Service
 import (
 	"encoding/base64"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
@@ -39,7 +40,7 @@ func nodeInfoProfessionHandler(c *gin.Context) {
 	}
 	// 转换为json
 	json, _ := json.Marshal(data)
-
+	fmt.Println(string(json))
 	// AES加密
 	aesjson, _ := AES.AesEncrypt(json, []byte(aes))
 	// base64编码

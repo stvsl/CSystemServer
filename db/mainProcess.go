@@ -16,6 +16,9 @@ var connsum int = 30
 
 var conns []conn
 
+// 连接优化器
+var connnum int = 0
+
 // 数据库连接存储管理器
 type conn struct {
 	// 数据库连接
@@ -116,9 +119,10 @@ func SetPoolSize(size int) error {
 // 获取数据库连接器
 func GetDB() (*gorm.DB, int, error) {
 	// 选择空闲的数据库连接
-	for i := 0; i < connsum; i++ {
+	for i := connnum; i < connsum; i++ {
 		if !conns[i].lock {
 			conns[i].lock = true
+			connnum++
 			return conns[i].db, i, nil
 		}
 	}
@@ -129,6 +133,7 @@ func GetDB() (*gorm.DB, int, error) {
 func Release(i int) {
 	// 释放数据库连接
 	conns[i].lock = false
+	connnum--
 }
 
 // 数据库优化

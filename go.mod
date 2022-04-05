@@ -7,7 +7,7 @@ require stvsljl.com/stvsl/Service v0.0.0
 require (
 	golang.org/x/text v0.3.7 // indirect
 	stvsljl.com/stvsl/AES v0.0.0 // indirect
-	stvsljl.com/stvsl/Sql v0.0.0 //indirect
+	stvsljl.com/stvsl/Sql v0.0.0
 )
 
 require (

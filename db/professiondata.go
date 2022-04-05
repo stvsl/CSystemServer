@@ -2,6 +2,7 @@ package Sql
 
 import (
 	"errors"
+	"math/rand"
 	"time"
 )
 
@@ -16,7 +17,7 @@ type Professiondata struct {
 	PhDirectHigh   float32   `gorm:"column:PH_DIRECT_HIGH" json:"phdirecthigh"`     // PH直接排放上限
 	PhDirectLow    float32   `gorm:"column:PH_DIRECT_LOW" json:"phdirectlow"`       // PH直接排放下限
 	PhIndirectHigh float32   `gorm:"column:PH_INDIRECT_HIGH" json:"phindirecthigh"` // PH间接排放上限
-	PhIndirectLow  float32   `gorm:"column:PH_INDORECT_LOW" json:"phindorectlow"`   // PH间接排放下限
+	PhIndirectLow  float32   `gorm:"column:PH_INDORECT_LOW" json:"phindirectlow"`   // PH间接排放下限
 	CODDirect      float32   `gorm:"column:COD_DIRECT" json:"coddirect"`            // 化学需氧量直接
 	CODIndirect    float32   `gorm:"column:COD_INDIRECT" json:"codindirect"`        // 化学需氧量间接
 	TPDirect       float32   `gorm:"column:TP_DIRECT" json:"tpdirect"`              // 总磷直接
@@ -44,7 +45,7 @@ type Professiondata struct {
 	Pb             float32   `gorm:"column:PB" json:"pb"`                           // 总铅
 	As             float32   `gorm:"column:AS" json:"as"`                           // 总砷
 	Cr6            float32   `gorm:"column:CR6" json:"cr6"`                         // 六价铬
-	Gc             float32   `gorm:"column:GC" json:"gs"`                           // 气体浓度
+	Gc             float32   `gorm:"column:GC" json:"gc"`                           // 气体浓度
 	Density        float32   `gorm:"column:DENSITY" json:"density"`                 // 浊度
 	Conductivity   float32   `gorm:"column:CONDUCTIVITY" json:"conductivity"`       // 电导率
 	Mc             float32   `gorm:"column:MC" json:"mc"`                           // 重金属
@@ -157,4 +158,67 @@ func (professiondata Professiondata) GetByTime(id []string, startTime, endTime s
 		}
 	}
 	return professiondatas, len(professiondatas), nil
+}
+
+func (professiondata Professiondata) VirtualMake(ID string) {
+	// 向数据库添加虚拟记录
+	var temp Professiondata
+	temp.ID = ID
+	temp.COMMUNITY = "虚拟检测机构"
+	temp.COMID = "VIRTUAL8888"
+	temp.TIME = time.Now()
+	temp.STATUS = 1
+	temp.DESCRIPTION = "虚拟检测结果,正常"
+	temp.PhDirectHigh = 6 + rand.Float32()
+	temp.PhDirectLow = 6 + rand.Float32()
+	temp.PhIndirectHigh = 6 + rand.Float32()
+	temp.PhIndirectLow = 6 + rand.Float32()
+	temp.CODDirect = rand.Float32() * 100
+	temp.CODIndirect = rand.Float32() * 200
+	temp.TPDirect = rand.Float32() * 1.5
+	temp.TPIndirect = rand.Float32() * 2
+	temp.TNDirect = rand.Float32() * 20
+	temp.IPIndirect = rand.Float32() * 40
+	temp.ANDirect = rand.Float32() * 15
+	temp.ANINDirect = rand.Float32() * 25
+	temp.OCCDirect = rand.Float32() * 5
+	temp.OCCIndirect = rand.Float32() * 10
+	temp.FSCDirectT = rand.Float32() * 100
+	temp.FSCIndirectT = rand.Float32() * 200
+	temp.FSCIndirectO = rand.Float32() * 140
+	temp.FSCDirectO = rand.Float32() * 70
+	temp.SADirect = rand.Float32() * 1
+	temp.SAIndirect = rand.Float32() * 1.5
+	temp.FDirect = rand.Float32() * 10
+	temp.FIndirect = rand.Float32() * 1.5
+	temp.Cu = rand.Float32() * 0.5
+	temp.Zn = rand.Float32() * 2.0
+	temp.Sn = rand.Float32() * 4.0
+	temp.Sb = rand.Float32() * 1.0
+	temp.Hg = rand.Float32() * 0.05
+	temp.Cd = rand.Float32() * 0.1
+	temp.Pb = rand.Float32() * 1.0
+	temp.As = rand.Float32() * 0.5
+	temp.Cr6 = rand.Float32() * 0.5
+	temp.Gc = rand.Float32() * 100
+	temp.Density = rand.Float32() * 1.0
+	temp.Conductivity = rand.Float32() * 1.0
+	temp.Mc = rand.Float32() * 5
+	temp.Sc = rand.Float32() * 1.0
+	temp.Toc = rand.Float32() * 10
+	temp.BOD5Direct = rand.Float32() * 30
+	temp.BOD5Indirect = rand.Float32() * 30
+	temp.BOD = rand.Float32() * 60
+	temp.PDirect = rand.Float32() * 1
+	temp.Bc = rand.Float32() * 1200
+	temp.Slc = rand.Float32() * 600
+	temp.COLORDirect = rand.Float32() * 30
+	temp.COLORIndirect = rand.Float32() * 30
+	temp.AFDirect = rand.Float32() * 10
+	temp.AFINDirect = rand.Float32() * 10
+	temp.CLDirect = rand.Float32() * 3000
+	temp.CLIndirect = rand.Float32() * 3000
+	temp.PINDirect = rand.Float32() * 1
+	temp.Ton = 1
+	temp.Add()
 }

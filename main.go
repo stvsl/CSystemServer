@@ -9,6 +9,7 @@ import (
 	"stvsljl.com/stvsl/Service"
 	"stvsljl.com/stvsl/influxdb"
 )
+import "stvsljl.com/stvsl/Sql"
 
 func main() {
 	fmt.Println("运行模式选择：\n 0.服务器模式（默认） 1.测试模式 ")
@@ -18,10 +19,14 @@ func main() {
 	if status == 0 {
 		start()
 	} else if status == 1 {
+		Sql.OpenPool()
+		var pro = Sql.Professiondata{}
 		// 死循环执行test
 		for i := 0; i < 100; i++ {
 			test("CX0000001")
 			test("CX0000002")
+			pro.VirtualMake("CX0000001")
+			pro.VirtualMake("CX0000002")
 		}
 		testread()
 	}
