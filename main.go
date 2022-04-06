@@ -9,7 +9,11 @@ import (
 	"stvsljl.com/stvsl/Service"
 	"stvsljl.com/stvsl/influxdb"
 )
-import "stvsljl.com/stvsl/Sql"
+import (
+	"strconv"
+
+	"stvsljl.com/stvsl/Sql"
+)
 
 func main() {
 	fmt.Println("运行模式选择：\n 0.服务器模式（默认） 1.测试模式 ")
@@ -20,15 +24,25 @@ func main() {
 		start()
 	} else if status == 1 {
 		Sql.OpenPool()
-		var pro = Sql.Professiondata{}
+		// var NI = Sql.NodeInformations{}
+		// NI.VirtualMake()
+		// var pro = Sql.Professiondata{}
 		// 死循环执行test
 		for i := 0; i < 100; i++ {
-			test("CX0000001")
-			test("CX0000002")
-			pro.VirtualMake("CX0000001")
-			pro.VirtualMake("CX0000002")
+			for i := 1; i < 500; i++ {
+				// 创建虚拟节点
+				// i 转为7位字符串
+				id := strconv.Itoa(i)
+				//判断id是否为7位
+				for j := len(id); j < 7; j++ {
+					id = "0" + id
+				}
+				id = "CX" + id
+				test(id)
+				// pro.VirtualMake(id)
+			}
+			testread()
 		}
-		testread()
 	}
 }
 
@@ -58,20 +72,20 @@ func test(id string) {
 	// 随机生成一个节点提交信息
 	sub.NodeId = id
 	// 生成随机数
-	sub.GasConcentration = rand.Float64()
-	sub.Temperature = rand.Float64()
-	sub.PH = rand.Float64()
+	sub.GasConcentration = 10 + rand.Float64()*10
+	sub.Temperature = 15 + rand.Float64()*10
+	sub.PH = rand.Float64()*3 + 4
 	sub.Density = rand.Float64()
 	sub.Conductivity = rand.Float64()
-	sub.OxygenConcentration = rand.Float64()
-	sub.MetalConcentration = rand.Float64()
-	sub.SC = rand.Float64()
-	sub.FSC = rand.Float64()
-	sub.TN = rand.Float64()
-	sub.TP = rand.Float64()
-	sub.TOC = rand.Float64()
-	sub.BOD = rand.Float64()
-	sub.COD = rand.Float64()
+	sub.OxygenConcentration = rand.Float64() * 0.9
+	sub.MetalConcentration = rand.Float64() * 2
+	sub.SC = rand.Float64() * 100
+	sub.FSC = rand.Float64() * 80
+	sub.TN = rand.Float64() * 50
+	sub.TP = rand.Float64() * 1.5
+	sub.TOC = rand.Float64() * 15
+	sub.BOD = rand.Float64() * 10
+	sub.COD = rand.Float64() * 50
 	sub.BC = (int64)(rand.Float64() * 100)
 	sub.SLC = (int64)(rand.Float64() * 100)
 	err := influxdb.Write(&sub)
@@ -79,7 +93,6 @@ func test(id string) {
 		fmt.Println(err, "!")
 	}
 	// 等待上面的写入操作完成
-	time.Sleep(time.Second * 1)
 }
 
 func testread() {

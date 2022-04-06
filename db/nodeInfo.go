@@ -2,7 +2,10 @@ package Sql
 
 import (
 	"errors"
+	"fmt"
 	"log"
+	"math/rand"
+	"strconv"
 	"time"
 )
 
@@ -207,4 +210,49 @@ func (nodeinfo NodeInformations) GetIDsByBelong(belong string) ([]string, error)
 	// 查询数据库
 	db.Where("Belong = ?", belong).Pluck("ID", &ids)
 	return ids, nil
+}
+func (nodeinfo NodeInformations) VirtualMake() {
+	// 创建虚拟节点
+	// 创建虚拟节点的数据库
+	db, i, err := GetDB()
+	if err != nil {
+		return
+	}
+	defer Release(i)
+	// 创建虚拟节点的数据库
+	// 创建8000个虚拟节点
+	tmpp := 0.0
+	for i := 0; i < 500; i++ {
+		// 创建虚拟节点
+		// i 转为7位字符串
+		id := strconv.Itoa(i)
+		//判断id是否为7位
+		for j := len(id); j < 7; j++ {
+			id = "0" + id
+		}
+		// 如果i是5的余数,重新生成i
+		if i%5 == 0 {
+			tmpp = rand.Float64()
+			fmt.Println(tmpp)
+		}
+		nodeinfo.ID = "CX" + id
+		nodeinfo.IP = "127.0.0.1"
+		nodeinfo.TYPE = 0
+		nodeinfo.LOCATE = "北京"
+		nodeinfo.LO = float32(116.404 + tmpp + rand.Float64()/10 - rand.Float64()/10)
+		nodeinfo.LI = float32(39.915 + tmpp + rand.Float64()/10 - rand.Float64()/10)
+		nodeinfo.BELONG = "CCOM0000001"
+		nodeinfo.PRINCIPAL = "张三"
+		nodeinfo.INSTALLER = "李四"
+		nodeinfo.MAINTAINER = "王五"
+		nodeinfo.DATACONFIG = "11111111111111111"
+		nodeinfo.AESKEY = "sdffsgsdfg"
+		nodeinfo.SELFINFO = "模拟自检"
+		nodeinfo.INSTALLDATE = time.Now()
+		nodeinfo.LASTUPLOAD = time.Now()
+		nodeinfo.SELFDATE = time.Now()
+		nodeinfo.REMARK = "模拟数据"
+		// 将虚拟节点信息插入数据库
+		db.Create(&nodeinfo)
+	}
 }

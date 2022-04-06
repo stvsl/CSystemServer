@@ -92,6 +92,7 @@ func nodeInfoSendHandler(c *gin.Context) {
 			return
 		}
 	}
+	fmt.Println(len(nodelist))
 
 	// 获取nodelist中的所有节点id
 	var ids []string
@@ -164,7 +165,6 @@ func nodeInfoSendHandler(c *gin.Context) {
 		COMTYPE    string `json:"comtype"`   // 企业类型
 		STANDARD   string `json:"standard"`  // 服从标准
 	}
-
 	var dataf []datapoints // 																* 数据融合
 	for i, v := range nodelist {
 		// 数据融合

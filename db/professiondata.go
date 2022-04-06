@@ -119,7 +119,7 @@ func (professiondata Professiondata) GetByIDs(ids []string) (*[]Professiondata, 
 	}
 	defer Release(i)
 	var professiondatas []Professiondata
-	err = db.Where("id in (?)", ids).Find(&professiondatas).Error
+	err = db.Where("id in (?)", ids).Limit(1000).Find(&professiondatas).Error
 	return &professiondatas, err
 }
 
@@ -134,7 +134,8 @@ func (professiondata Professiondata) GetAllByIDs(ids []string, startTime time.Ti
 	defer Release(i)
 	var professiondatas []Professiondata
 	// 查询全部符合的记录
-	err = db.Where("id in (?) and TIME >= ? and TIME <= ?", ids, startTime, endTime).Find(&professiondatas).Error
+	// 分页查询
+	err = db.Where("id in (?) and TIME >= ? and TIME <= ?", ids, startTime, endTime).Limit(1000).Find(&professiondatas).Error
 	return professiondatas, err
 }
 

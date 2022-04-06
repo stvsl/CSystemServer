@@ -143,6 +143,28 @@
                 display: none;
             }
 
+            #map_container {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+            }
+
+            #tools {
+                position: absolute;
+                z-index: 100;
+                right: 5px;
+                bottom: 5px;
+                padding: 10px;
+                color: #fff;
+                background: rgba(0, 0, 0, .5);
+            }
+
+
+            #tools button {
+                width: 100px;
+                height: 30px;
+            }
+
         }
     </style>
     <!-- 调用qt内部组件完成qt连接器的载入 -->
@@ -150,6 +172,8 @@
     <script type="text/javascript"
         src="https://api.map.baidu.com/api?v=1.0&type=webgl&ak=HOeqsdIRwYb4SaOozYyY3yTqxPGxoz6U">
         </script>
+    <script src="https://unpkg.com/mapvgl/dist/mapvgl.min.js"></script>
+    <script src="https://unpkg.com/mapvgl/dist/mapvgl.threelayers.min.js"></script>
 </head>
 
 <body>
@@ -157,21 +181,60 @@
     <div id="container"></div>
     <script type="text/javascript">
         // 创建地图实例 
-        var map = new BMapGL.Map("container");
+        var mapGL = new BMapGL.Map("container");
+        var view = new mapvgl.View({
+            map: mapGL,
+        });
+
+        // 3. 创建可视化图层，并添加到图层管理器中
+        var layer = new mapvgl.HeatmapLayer({
+            size: 800,
+            max: 40,
+            min: 0,
+            unit: 'm',
+            gradient: {
+                0.25: 'rgba(0, 0, 255, 1)',
+                0.55: 'rgba(0, 255, 0, 1)',
+                0.85: 'rgba(255, 255, 0, 1)',
+                1: 'rgba(255, 0, 0, 1)'
+            },
+        });
+        view.addLayer(layer);
+
+        // 4. 准备好规范化坐标数据
+        var data = [];
+        for (var i = 0; i < 10000; i++) {
+            var lng = Math.random() + 116.33;
+            var lat = Math.random() + 39.89;
+            var count = Math.random() * 10;
+            data.push({
+                geometry: {
+                    type: 'Point',
+                    coordinates: [lng, lat]
+                },
+                count: count
+            });
+        }
+
+
+        // 5. 关联图层与数据
+        layer.setData(data);
+
         // 创建点坐标 
         var point = new BMapGL.Point(116.404, 39.915);
         // 初始化地图，设置中心点坐标和地图级别 
-        map.centerAndZoom(point, 15);
+        mapGL.centerAndZoom(point, 15);
         //开启鼠标滚轮缩放
-        map.enableScrollWheelZoom(true);
+        mapGL.enableScrollWheelZoom(true);
         //设置地图显示等级（地图深度）
-        map.setZoom(20);
+        mapGL.setZoom(20);
         // 添加比例尺控件
         var scaleCtrl = new BMapGL.ScaleControl();
-        map.addControl(scaleCtrl);
+        mapGL.addControl(scaleCtrl);
         // 添加3D控件
         var navi3DCtrl = new BMapGL.NavigationControl3D();
-        map.addControl(navi3DCtrl);
+        mapGL.addControl(navi3DCtrl);
+
         var trans;
         //qt通信组件实例化
         new QWebChannel(qt.webChannelTransport, function (channel) {
@@ -194,26 +257,26 @@
         //设置中央位置
         function setCenter(x, y) {
             var point = new BMapGL.Point(x, y);
-            map.centerAndZoom(point, 15);
-            map.setZoom(20);
+            mapGL.centerAndZoom(point, 15);
+            mapGL.setZoom(20);
         }
 
         function setPos(i, j) {
             var point = new BMapGL.Point(i, j);
-            map.centerAndZoom(point, 15);
-            map.setZoom(20);
+            mapGL.centerAndZoom(point, 15);
+            mapGL.setZoom(20);
         }
 
         //设置地标文字显示
         function setPoiText(boo) {
-            map.setDisplayOptions({
+            mapGL.setDisplayOptions({
                 poiText: boo
             })
         }
 
         //设置地标图标显示
         function setPoiIcon(boo) {
-            map.setDisplayOptions({
+            mapGL.setDisplayOptions({
                 poiIcon: boo
             })
         }
@@ -224,8 +287,8 @@
             //将地址解析结果显示在地图上，并调整地图视野
             myGeo.getPoint(p, function (point) {
                 if (point) {
-                    map.centerAndZoom(point, 16);
-                    map.setZoom(20);
+                    mapGL.centerAndZoom(point, 16);
+                    mapGL.setZoom(20);
                 } else {
                     alert("error:您的输入无效");
                 }
@@ -234,14 +297,16 @@
 
         //卫星地球模式
         function setMapType() {
-            map.setMapType(BMAP_EARTH_MAP);
+            mapGL.setMapType(BMAP_EARTH_MAP);
         }
 
         //添加结点显示
         function addPoint(info, x, y) {
+            // 移除先前的点
+            mapGL.clearOverlays();
             var point = new BMapGL.Point(x, y);
             var marker = new BMapGL.Marker(point);
-            map.addOverlay(marker);
+            mapGL.addOverlay(marker);
             // 点击后显示详情
             marker.addEventListener("click", function () {
                 var infoWindow = new BMapGL.InfoWindow(info);
