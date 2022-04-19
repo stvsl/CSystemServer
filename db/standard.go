@@ -102,28 +102,25 @@ func (s *Standard) Delete() error {
 	return nil
 }
 
-// 实现standardInfo接口的Get方法
-func (s *Standard) Get() (string, error) {
-	db, i, err := GetDB()
-	if err != nil {
-		return "", err
-	}
-	defer Release(i)
-	// 存储查询集合
-	var standards []Standard
-	// 获取数据库全部数据
-	if err := db.Find(&standards).Error; err != nil {
-		log.Panicln("获取数据库失败：", err)
-		return "", errors.New("获取数据库失败")
-	}
-	// 将查询集合转换为json格式
-	jsonStr, err := json.Marshal(standards)
-	if err != nil {
-		log.Panicln("转换json格式失败：", err)
-		return "", errors.New("转换json格式失败")
-	}
-	return string(jsonStr), nil
-}
+// // 实现standardInfo接口的Get方法
+// func (s *Standard) Get(id string) (string, error) {
+// 	db, i, err := GetDB()
+// 	if err != nil {
+// 		return "", err
+// 	}
+// 	defer Release(i)
+// 	// 存储查询集合
+// 	var standards []Standard
+// 	// 查询ID为指定id的数据
+
+// 	// 将查询集合转换为json格式
+// 	jsonStr, err := json.Marshal(standards)
+// 	if err != nil {
+// 		log.Panicln("转换json格式失败：", err)
+// 		return "", errors.New("转换json格式失败")
+// 	}
+// 	return string(jsonStr), nil
+// }
 
 func (s *Standard) GetByID(id string) (string, error) {
 	db, i, err := GetDB()

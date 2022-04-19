@@ -20,7 +20,8 @@ func Start() {
 	router.LoadHTMLGlob("./web/pages/*")
 	router.GET("/ping", pingHandler)                                              //连接测试,同时返回服务器RSA密钥信息
 	router.POST("/ping", pingpostHandler)                                         //二次连接，连理双向通信
-	router.GET("/pages/default/map", mapPageHandler)                              //对外提供地图页面
+	router.GET("/pages/default/map", mapPageHandler)                              //对外提供默认地图页面
+	router.GET("/pages/config/map/", mapConfigPageHandler)                        //对外提供配置地图页面
 	router.GET("/favicon.ico", faviconHandler)                                    //对外提供favicon.ico
 	router.GET("/redpoint", redpointHandler)                                      //对外提供红色坐标点
 	router.GET("/greenpoint", greenpointHandler)                                  //对外提供绿色坐标点

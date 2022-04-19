@@ -220,9 +220,9 @@ func (nodeinfo NodeInformations) VirtualMake() {
 	}
 	defer Release(i)
 	// 创建虚拟节点的数据库
-	// 创建8000个虚拟节点
+	// 创建256个虚拟节点
 	tmpp := 0.0
-	for i := 0; i < 500; i++ {
+	for i := 1; i < 201; i++ {
 		// 创建虚拟节点
 		// i 转为7位字符串
 		id := strconv.Itoa(i)

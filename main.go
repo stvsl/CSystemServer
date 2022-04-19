@@ -24,13 +24,12 @@ func main() {
 		start()
 	} else if status == 1 {
 		Sql.OpenPool()
-		// var NI = Sql.NodeInformations{}
-		// NI.VirtualMake()
-		// var pro = Sql.Professiondata{}
+		var NI = Sql.NodeInformations{}
+		NI.VirtualMake()
+		var pro = Sql.Professiondata{}
 		// 死循环执行test
-		for i := 0; i < 100; i++ {
-			for i := 1; i < 500; i++ {
-				// 创建虚拟节点
+		for i := 0; i < 20; i++ {
+			for i := 1; i < 201; i++ {
 				// i 转为7位字符串
 				id := strconv.Itoa(i)
 				//判断id是否为7位
@@ -39,7 +38,7 @@ func main() {
 				}
 				id = "CX" + id
 				test(id)
-				// pro.VirtualMake(id)
+				pro.VirtualMake(id)
 			}
 			testread()
 		}

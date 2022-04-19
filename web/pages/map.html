@@ -188,24 +188,25 @@
 
         // 3. 创建可视化图层，并添加到图层管理器中
         var layer = new mapvgl.HeatmapLayer({
-            size: 800,
-            max: 40,
+            size: 1000,
+            max: 45,
             min: 0,
             unit: 'm',
             gradient: {
-                0.25: 'rgba(0, 0, 255, 1)',
-                0.55: 'rgba(0, 255, 0, 1)',
-                0.85: 'rgba(255, 255, 0, 1)',
-                1: 'rgba(255, 0, 0, 1)'
+                0.30: 'rgba(10, 10, 255, 0.0)',
+                0.35: 'rgba(10, 10, 255, 0.6)',
+                0.65: 'rgba(10, 255, 10, 0.7)',
+                0.85: 'rgba(255, 255, 10, 1)',
+                1: 'rgba(255, 10, 10, 1)'
             },
         });
         view.addLayer(layer);
 
         // 4. 准备好规范化坐标数据
         var data = [];
-        for (var i = 0; i < 10000; i++) {
-            var lng = Math.random() + 116.33;
-            var lat = Math.random() + 39.89;
+        for (var i = 0; i < 20000; i++) {
+            var lng = Math.random() * 2 + 115.33;
+            var lat = Math.random() * 2 + 38.89;
             var count = Math.random() * 10;
             data.push({
                 geometry: {
@@ -215,7 +216,6 @@
                 count: count
             });
         }
-
 
         // 5. 关联图层与数据
         layer.setData(data);
@@ -268,17 +268,30 @@
         }
 
         //设置地标文字显示
-        function setPoiText(boo) {
-            mapGL.setDisplayOptions({
-                poiText: boo
-            })
+        function setPoiText(i) {
+            if (i = 1) {
+                mapGL.setDisplayOptions({
+                    poiText: true
+                })
+            } else {
+                mapGL.setDisplayOptions({
+                    poiText: false
+                })
+            }
+
         }
 
         //设置地标图标显示
-        function setPoiIcon(boo) {
-            mapGL.setDisplayOptions({
-                poiIcon: boo
-            })
+        function setPoiIcon(i) {
+            if (i = 1) {
+                mapGL.setDisplayOptions({
+                    poiIcon: true
+                })
+            } else {
+                mapGL.setDisplayOptions({
+                    poiIcon: false
+                })
+            }
         }
 
         //搜索功能
@@ -296,12 +309,23 @@
         }
 
         //卫星地球模式
-        function setMapType() {
-            mapGL.setMapType(BMAP_EARTH_MAP);
-        }
+        function setMapType(status) {
+            if (status == 1) {
+                mapGL.setMapType(BMAP_EARTH_MAP);
+            } else {
+                mapGL.setMapType(BMAP_NORMAL_MAP);
+            }
 
+        }
+        var datap = [];
         //添加结点显示
-        function addPoint(info, x, y) {
+        function addPoint(info, x, y, datas) {
+            // 打印datas的类型
+            console.log(typeof (datas));
+            datas = datas.split(",");
+            for (var i = 0; i < datas.length; i++) {
+                datap[i] = parseFloat(datas[i]);
+            }
             // 移除先前的点
             mapGL.clearOverlays();
             var point = new BMapGL.Point(x, y);
@@ -312,7 +336,8 @@
                 var infoWindow = new BMapGL.InfoWindow(info);
                 infoWindow.setTitle("节点信息");
                 this.openInfoWindow(infoWindow);
-                setTimeout(fun, 500);
+                console.log(datap)
+                setTimeout(fun(), 1000);
             });
         }
 
@@ -323,10 +348,11 @@
                 grid: {
                     top: '2%',
                     left: '15%',
-                    right: '40%',
+                    right: '41%',
                     bottom: '2%',
                 },
                 yAxis: {
+                    type: 'category',
                     data: ['气体浓度', '温度', 'PH', '电导率', '含氧量', '重金属', '生物需氧量'],
                     splitLine: {
                         show: false
@@ -335,11 +361,20 @@
                         show: false
                     },
                 },
-                xAxis: {},
+                xAxis: {
+                    type: 'value',
+                    splitLine: {
+                        show: false
+                    },
+                    axisTick: {
+                        show: false
+                    },
+                },
                 series: [
                     {
                         type: 'bar',
-                        data: [23, 24, 18, 25, 27, 28, 25],
+                        precision: 2,
+                        data: [datap[6], datap[5], datap[4], datap[3], datap[2], datap[1], datap[0]],
                         itemStyle: {
                             normal: {
                                 color: function (params) {
@@ -358,10 +393,10 @@
                         radius: [0, '40%'],
                         center: ['80%', '50%'],
                         data: [
-                            { value: 10, name: '重金属' },
-                            { value: 5, name: '固体' },
-                            { value: 15, name: '细菌' },
-                            { value: 25, name: '化合物' }
+                            { value: datap[7], name: '重金属' },
+                            { value: datap[8], name: '固体' },
+                            { value: datap[9], name: '细菌' },
+                            { value: datap[10], name: '化合物' }
                         ]
 
                     },

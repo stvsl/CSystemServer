@@ -1,7 +1,6 @@
 package Service
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -9,7 +8,9 @@ import (
 
 func mapPageHandler(c *gin.Context) {
 	c.HTML(http.StatusOK, "map.html", nil)
-	fmt.Println("IP:", c.ClientIP())
+}
+func mapConfigPageHandler(c *gin.Context) {
+	c.HTML(http.StatusOK, "configmap.html", nil)
 }
 
 func faviconHandler(c *gin.Context) {

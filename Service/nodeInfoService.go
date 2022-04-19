@@ -40,7 +40,6 @@ func nodeInfoProfessionHandler(c *gin.Context) {
 	}
 	// 转换为json
 	json, _ := json.Marshal(data)
-	fmt.Println(string(json))
 	// AES加密
 	aesjson, _ := AES.AesEncrypt(json, []byte(aes))
 	// base64编码
@@ -436,28 +435,25 @@ func nodeConfigSetHandler(c *gin.Context) {
 
 // StandardGetHandler
 func StandardGetHandler(c *gin.Context) {
-	// // 获取query参数
-	// id := c.Query("id")
-	// // 查询数据库对象
-	// n := Sql.Standard{}
-	// // 查询数据库
-	// standard, err := n.Get(id)
-	// if err != nil {
-	// 	// 判断err内容是否是数据库连接失败
-	// 	if strings.Contains(err.Error(), "数据库连接失败") {
-	// 		CX101(c)
-	// 		return
-	// 	}
-
-	// 	CX301(c)
-	// 	return
-	// }
-	// // standard转换为json
-	// str, _ := json.Marshal(standard)
+	// 获取query参数
+	id := c.Query("id")
+	// 查询数据库对象
+	n := Sql.Standard{}
+	// 查询数据库
+	standard, err := n.GetByID(id)
+	if err != nil {
+		// 判断err内容是否是数据库连接失败
+		if strings.Contains(err.Error(), "数据库连接失败") {
+			CX101(c)
+			return
+		}
+		CX301(c)
+		return
+	}
 	// 返回查询结果
 	c.JSON(http.StatusOK, gin.H{
 		"code":    "CX200",
 		"message": "success",
-		// "data":    str,
+		"data":    standard,
 	})
 }

@@ -154,6 +154,8 @@ func QueryAll(nodeid []string, startTime, endTime string) ([]SubmitInfoWithTime,
 			Time:                fmt.Sprintf("%v", record.ValueByKey("_time")),
 		}
 		suminfos = append(suminfos, *submitInfo)
+		// 跳过一次
+		result.Next()
 	}
 	return suminfos, nil
 }
